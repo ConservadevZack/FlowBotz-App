@@ -1,11 +1,13 @@
 # Dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 
 # Production builds
-/.next/
+.next/
 /out/
+dist/
+build/
 
 # Environment variables
 .env*.local
@@ -46,3 +48,6 @@ env/
 .tmp/
 *.tmp
 *.temp
+
+# Package lock files (optional - uncomment if you want to exclude)
+package-lock.json

@@ -4,13 +4,14 @@
 echo "🚀 Starting FlowBotz Platform..."
 echo "================================"
 
-# Get the current directory (FlowBotzApp root)
-ROOT_DIR=$(pwd)
+# Get the script directory and go to project root
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ROOT_DIR=$(dirname "$SCRIPT_DIR")
 
 # Function to start backend in background
 start_backend() {
     echo "🔧 Starting Backend..."
-    cd "$ROOT_DIR/FLOWBOTZ_PROJECT_TO_MOVE/backend"
+    cd "$ROOT_DIR/backend"
     
     # Check if .env exists
     if [ ! -f ".env" ]; then
@@ -55,8 +56,8 @@ EOF
 start_frontend() {
     echo "🎨 Starting Frontend..."
     
-    # Ensure we're in the root directory
-    cd "$ROOT_DIR"
+    # Go to frontend directory
+    cd "$ROOT_DIR/frontend"
     
     # Check if .env.local exists
     if [ ! -f ".env.local" ]; then
