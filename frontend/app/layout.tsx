@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import './globals.css'
+import { AuthProvider } from '@/components/AuthProvider'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -61,9 +62,11 @@ export default function RootLayout({
         <div className="cosmic-backdrop-blur" />
         
         {/* Main Content */}
-        <main className="relative z-10">
-          {children}
-        </main>
+        <AuthProvider>
+          <main className="relative z-10">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   )

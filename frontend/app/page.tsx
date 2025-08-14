@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Sparkles, Wand2, Rocket, Star, ArrowRight, Play, Palette, Zap, Image as ImageIcon } from "lucide-react";
+import FloatingNavbar from '@/components/FloatingNavbar';
 
 export default function HomePage() {
   return (
@@ -27,64 +28,10 @@ export default function HomePage() {
         })}
       </div>
       
-      {/* Cosmic Navigation */}
-      <nav className="cosmic-glass-medium backdrop-filter backdrop-blur-xl fixed top-0 left-0 right-0 z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo - Touch optimized */}
-            <Link href="/" className="flex items-center gap-3 group min-h-[44px] py-2">
-              <div className="stellar-glass-purple w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center cosmic-animate-glow">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-              </div>
-              <span className="text-h6 sm:text-h5 cosmic-text-gradient">FlowBotz</span>
-            </Link>
-
-            {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center gap-6 lg:gap-8">
-              <Link href="/create" className="text-body text-white/80 hover:text-white transition-all duration-200 min-h-[44px] flex items-center px-2 py-2 rounded-lg hover:bg-white/10">
-                Create
-              </Link>
-              <Link href="/gallery" className="text-body text-white/80 hover:text-white transition-all duration-200 min-h-[44px] flex items-center px-2 py-2 rounded-lg hover:bg-white/10">
-                Gallery
-              </Link>
-              <Link href="/pricing" className="text-body text-white/80 hover:text-white transition-all duration-200 min-h-[44px] flex items-center px-2 py-2 rounded-lg hover:bg-white/10">
-                Pricing
-              </Link>
-            </div>
-
-            {/* Mobile & Desktop Action Buttons */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              {/* Mobile Navigation Menu Button */}
-              <button 
-                className="md:hidden cosmic-glass p-2 rounded-xl min-h-[44px] min-w-[44px] flex items-center justify-center transition-all duration-200 hover:bg-white/10"
-                aria-label="Open navigation menu"
-              >
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              
-              {/* Desktop Auth Buttons */}
-              <div className="hidden sm:flex items-center gap-3">
-                <Link href="/login" className="cosmic-button cosmic-button-ghost min-h-[44px] flex items-center justify-center">
-                  Sign In
-                </Link>
-                <Link href="/signup" className="cosmic-button cosmic-button-primary min-h-[44px] flex items-center justify-center">
-                  Get Started
-                </Link>
-              </div>
-              
-              {/* Mobile CTA Button */}
-              <Link href="/create" className="sm:hidden cosmic-button cosmic-button-primary cosmic-button-sm min-h-[44px] flex items-center justify-center">
-                Create
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <FloatingNavbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 min-h-screen flex items-center">
+      <section className="relative pt-32 sm:pt-40 pb-16 sm:pb-20 px-4 sm:px-6 min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full">
           <div className="text-center">
             {/* Hero Content */}

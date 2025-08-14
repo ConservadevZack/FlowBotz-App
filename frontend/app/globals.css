@@ -153,6 +153,12 @@
   --glass-cosmic-medium: rgba(99, 102, 241, 0.09);
   --glass-cosmic-strong: rgba(99, 102, 241, 0.12);
   
+  /* Interactive Element Glass Effects */
+  --glass-interactive-light: rgba(255, 255, 255, 0.12);
+  --glass-interactive-medium: rgba(255, 255, 255, 0.15);
+  --glass-interactive-strong: rgba(255, 255, 255, 0.18);
+  --glass-form-element: rgba(255, 255, 255, 0.08);
+  
   /* Stellar Glass Variations */
   --glass-stellar-purple: rgba(99, 102, 241, 0.08);
   --glass-stellar-blue: rgba(59, 130, 246, 0.08);
@@ -169,6 +175,17 @@
   --shadow-nebula-2: 0 4px 16px rgba(11, 20, 38, 0.5);
   --shadow-nebula-3: 0 8px 32px rgba(11, 20, 38, 0.6);
   --shadow-cosmic: 0 16px 64px rgba(11, 20, 38, 0.7);
+  
+  /* Professional Shadows for Interactive Elements */
+  --shadow-interactive-sm: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-interactive-md: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-interactive-lg: 0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-interactive-xl: 0 12px 24px rgba(0, 0, 0, 0.18), 0 6px 12px rgba(0, 0, 0, 0.12);
+  
+  /* Glass Element Shadows */
+  --shadow-glass-subtle: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-glass-moderate: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-glass-strong: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
   
   --glow-purple: 0 0 20px rgba(99, 102, 241, 0.3);
   --glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
@@ -187,6 +204,14 @@
   --gradient-nebula: linear-gradient(135deg, var(--cosmic-pink) 0%, var(--cosmic-gold) 100%);
   --gradient-aurora: linear-gradient(135deg, var(--cosmic-green) 0%, var(--cosmic-blue) 100%);
   --gradient-space: linear-gradient(180deg, var(--cosmic-deep-space) 0%, var(--cosmic-void-black) 100%);
+  
+  /* Border Radius Standards */
+  --radius-sm: 0.375rem;    /* 6px - Small elements */
+  --radius-md: 0.5rem;      /* 8px - Standard elements */
+  --radius-lg: 0.75rem;     /* 12px - Buttons, inputs */
+  --radius-xl: 1rem;        /* 16px - Cards, containers */
+  --radius-2xl: 1.5rem;     /* 24px - Large cards */
+  --radius-3xl: 2rem;       /* 32px - Hero elements */
   
   /* Animations */
   --duration-fast: 150ms;
@@ -388,7 +413,7 @@ body {
   padding: 0.75rem 1.5rem;
   font-weight: 500;
   border: none;
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
   text-decoration: none;
@@ -396,6 +421,12 @@ body {
   user-select: none;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-interactive-sm);
+}
+
+.cosmic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-interactive-md);
 }
 
 .cosmic-button-primary {
@@ -421,17 +452,18 @@ body {
 }
 
 .cosmic-button-glass {
-  background: var(--glass-cosmic-light);
+  background: var(--glass-interactive-light);
   color: white;
   border: 1px solid var(--border-cosmic);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: var(--shadow-glass-subtle);
 }
 
 .cosmic-button-glass:hover {
-  background: var(--glass-cosmic-medium);
+  background: var(--glass-interactive-medium);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-nebula-1);
+  box-shadow: var(--shadow-glass-moderate);
 }
 
 .cosmic-button-ghost {
@@ -444,6 +476,17 @@ body {
   background: var(--glass-cosmic-subtle);
   color: white;
   border-color: var(--border-stellar);
+}
+
+.cosmic-button-accent {
+  background: var(--gradient-nebula);
+  color: white;
+  box-shadow: var(--glow-pink);
+}
+
+.cosmic-button-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-pink), var(--shadow-nebula-2);
 }
 
 /* Button Sizes */
@@ -467,43 +510,51 @@ body {
    ============================================================================ */
 
 .cosmic-card {
-  background: var(--glass-cosmic-light);
+  background: var(--glass-interactive-light);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid var(--border-stellar);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-nebula-1);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-glass-moderate);
   padding: 1.5rem;
   transition: all var(--duration-normal) var(--ease-out);
 }
 
 .cosmic-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-nebula-3);
+  transform: translateY(-2px);
+  background: var(--glass-interactive-medium);
+  box-shadow: var(--shadow-glass-strong);
   border-color: var(--border-cosmic);
 }
 
 .cosmic-card-hero {
-  background: var(--glass-cosmic-medium);
+  background: var(--glass-interactive-medium);
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   border: 1px solid var(--border-cosmic);
-  border-radius: 2rem;
-  box-shadow: var(--shadow-cosmic);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-interactive-xl);
   padding: 3rem;
   position: relative;
   overflow: hidden;
 }
 
 .cosmic-card-feature {
-  background: var(--glass-cosmic-light);
+  background: var(--glass-interactive-light);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid var(--border-stellar);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-nebula-2);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-interactive-md);
   padding: 2rem;
   transition: all var(--duration-normal) var(--ease-out);
+}
+
+.cosmic-card-feature:hover {
+  background: var(--glass-interactive-medium);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-interactive-lg);
+  border-color: var(--border-cosmic);
 }
 
 .cosmic-card-interactive {
@@ -525,6 +576,137 @@ body {
 
 .cosmic-card-interactive:hover::after {
   left: 100%;
+}
+
+/* ============================================================================
+   FORM ELEMENTS
+   ============================================================================ */
+
+.cosmic-input {
+  background: var(--glass-form-element);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid var(--border-stellar);
+  border-radius: var(--radius-lg);
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all var(--duration-normal) var(--ease-out);
+  box-shadow: var(--shadow-glass-subtle);
+}
+
+.cosmic-input:focus {
+  outline: none;
+  background: var(--glass-interactive-light);
+  border-color: var(--border-cosmic);
+  box-shadow: var(--shadow-glass-moderate), 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.cosmic-input:hover {
+  background: var(--glass-interactive-light);
+  border-color: var(--border-cosmic);
+}
+
+.cosmic-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cosmic-select {
+  background: var(--glass-form-element);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid var(--border-stellar);
+  border-radius: var(--radius-lg);
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all var(--duration-normal) var(--ease-out);
+  box-shadow: var(--shadow-glass-subtle);
+  cursor: pointer;
+}
+
+.cosmic-select:focus {
+  outline: none;
+  background: var(--glass-interactive-light);
+  border-color: var(--border-cosmic);
+  box-shadow: var(--shadow-glass-moderate), 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.cosmic-select:hover {
+  background: var(--glass-interactive-light);
+  border-color: var(--border-cosmic);
+}
+
+.cosmic-checkbox {
+  width: 1rem;
+  height: 1rem;
+  background: var(--glass-form-element);
+  border: 1px solid var(--border-stellar);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.cosmic-checkbox:checked {
+  background: var(--gradient-cosmic);
+  border-color: var(--cosmic-purple);
+}
+
+.cosmic-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Form Container */
+.cosmic-form-container {
+  background: var(--glass-interactive-light);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-cosmic);
+  border-radius: var(--radius-2xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-interactive-lg);
+}
+
+/* Range Slider */
+.slider {
+  background: var(--glass-form-element);
+  border-radius: var(--radius-lg);
+  outline: none;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--gradient-cosmic);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: var(--shadow-interactive-sm);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-interactive-md);
+}
+
+.slider::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--gradient-cosmic);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: var(--shadow-interactive-sm);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-interactive-md);
 }
 
 /* ============================================================================
