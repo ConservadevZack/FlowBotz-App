@@ -8,6 +8,54 @@ echo "================================"
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT_DIR=$(dirname "$SCRIPT_DIR")
 
+# Function to kill processes on specific ports
+kill_port() {
+    local port=$1
+    local process_name=$2
+    
+    echo "🔍 Checking for processes on port $port..."
+    
+    # Find and kill processes using the port
+    local pids=$(lsof -ti:$port 2>/dev/null)
+    
+    if [ ! -z "$pids" ]; then
+        echo "⚠️  Found $process_name process(es) on port $port. Killing..."
+        echo "$pids" | xargs kill -9 2>/dev/null
+        sleep 1
+        
+        # Verify the port is free
+        if lsof -ti:$port >/dev/null 2>&1; then
+            echo "❌ Failed to kill process on port $port. You may need to kill it manually."
+        else
+            echo "✅ Successfully freed port $port"
+        fi
+    else
+        echo "✅ Port $port is available"
+    fi
+}
+
+# Function to setup clean environment
+setup_clean_environment() {
+    echo "🧹 Setting up clean environment..."
+    
+    # Kill any existing FlowBotz processes
+    kill_port 3000 "Frontend (Next.js)"
+    kill_port 8000 "Backend (FastAPI)"
+    
+    # Also kill any node processes that might be hanging
+    echo "🔍 Cleaning up any hanging Node.js processes..."
+    pkill -f "next dev" 2>/dev/null || true
+    pkill -f "npm run dev" 2>/dev/null || true
+    
+    # Clean up any existing PID files
+    if [ -f "$ROOT_DIR/backend.pid" ]; then
+        rm "$ROOT_DIR/backend.pid"
+        echo "✅ Cleaned up backend PID file"
+    fi
+    
+    echo "✅ Environment cleaned up"
+}
+
 # Function to start backend in background
 start_backend() {
     echo "🔧 Starting Backend..."
@@ -72,7 +120,8 @@ start_frontend() {
     fi
     
     echo "🌐 Frontend starting on http://localhost:3000"
-    npm run dev
+    # Force Next.js to use port 3000 (it should be free now)
+    PORT=3000 npm run dev
 }
 
 # Function to cleanup on exit
@@ -91,6 +140,9 @@ cleanup() {
 
 # Set trap to cleanup on script exit
 trap cleanup INT TERM
+
+# Setup clean environment first
+setup_clean_environment
 
 # Start backend in background
 start_backend

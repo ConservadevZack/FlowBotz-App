@@ -169,36 +169,36 @@ export default function PricingPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-display-large cosmic-text-gradient mb-4">
+        <div className="text-center mb-16 cosmic-animate-fade-in">
+          <h1 className="text-display-large cosmic-text-gradient mb-6 font-bold">
             Choose Your Plan
           </h1>
-          <p className="text-body-large text-white/80 max-w-2xl mx-auto mb-8">
-            Start creating stunning AI-powered designs today. Upgrade anytime as your needs grow.
+          <p className="text-body-large text-white/85 max-w-3xl mx-auto mb-10 font-medium leading-relaxed">
+            Start creating stunning AI-powered designs today. Upgrade anytime as your needs grow. Join thousands of creators worldwide.
           </p>
 
           {/* Billing Toggle */}
-          <div className="cosmic-card inline-flex p-1 max-w-xs mx-auto">
+          <div className="cosmic-card-premium inline-flex p-2 max-w-sm mx-auto cosmic-animate-bounce-in cosmic-interactive border border-white/20">
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`flex-1 px-4 py-2 rounded-lg transition-all ${
+              className={`flex-1 px-6 py-3 rounded-xl transition-all duration-300 font-semibold text-base ${
                 billingCycle === 'monthly'
-                  ? 'bg-purple-500 text-white'
-                  : 'text-white/60 hover:text-white'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg transform scale-105'
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
               }`}
             >
               Monthly
             </button>
             <button
               onClick={() => setBillingCycle('yearly')}
-              className={`flex-1 px-4 py-2 rounded-lg transition-all relative ${
+              className={`flex-1 px-6 py-3 rounded-xl transition-all duration-300 relative font-semibold text-base ${
                 billingCycle === 'yearly'
-                  ? 'bg-purple-500 text-white'
-                  : 'text-white/60 hover:text-white'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg transform scale-105'
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
               }`}
             >
               Yearly
-              <span className="absolute -top-2 -right-1 bg-green-500 text-xs px-1 py-0.5 rounded text-white font-medium">
+              <span className="absolute -top-2 -right-2 bg-green-500 text-xs px-2 py-1 rounded-full text-white font-bold shadow-lg animate-pulse">
                 -20%
               </span>
             </button>
@@ -206,19 +206,22 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 cosmic-stagger">
           {currentPlans.map((plan) => (
-            <div
+            <article
               key={plan.id}
-              className={`cosmic-card relative ${
-                plan.popular ? 'stellar-glass-purple' : ''
-              } ${plan.enterprise ? 'stellar-glass-gold' : ''}`}
+              className={`cosmic-card-premium relative cosmic-animate-scale-in cosmic-interactive cosmic-focus-ring p-8 border-2 transition-all duration-300 hover:scale-105 ${
+                plan.popular ? 'stellar-glass-purple border-purple-400/50 shadow-2xl shadow-purple-500/20' : 'border-white/20'
+              } ${plan.enterprise ? 'stellar-glass-gold border-yellow-400/50 shadow-2xl shadow-yellow-500/20' : ''}`}
+              tabIndex="0"
+              role="article"
+              aria-labelledby={`plan-${plan.id}-name`}
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                    <span>⭐</span>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full text-base font-bold flex items-center gap-2 shadow-2xl animate-pulse">
+                    <span className="text-xl">⭐</span>
                     Most Popular
                   </div>
                 </div>
@@ -226,32 +229,32 @@ export default function PricingPage() {
 
               {/* Enterprise Badge */}
               {plan.enterprise && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                    <span>🚀</span>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-2 rounded-full text-base font-bold flex items-center gap-2 shadow-2xl">
+                    <span className="text-xl">🚀</span>
                     Enterprise
                   </div>
                 </div>
               )}
 
-              <div className="text-center mb-6">
-                <h3 className="text-h4 font-bold mb-2">{plan.name}</h3>
-                <p className="text-white/60 text-sm mb-4">{plan.description}</p>
+              <div className="text-center mb-8">
+                <h3 id={`plan-${plan.id}-name`} className="text-h2 font-bold mb-4">{plan.name}</h3>
+                <p className="text-white/75 text-base mb-6 font-medium leading-relaxed">{plan.description}</p>
                 
-                <div className="mb-4">
+                <div className="mb-6">
                   {plan.enterprise ? (
-                    <div className="text-h3 font-bold">Custom</div>
+                    <div className="text-h1 font-extrabold cosmic-text-gradient">Custom</div>
                   ) : (
                     <div>
-                      <div className="text-h3 font-bold">
-                        ${plan.price}
+                      <div className="text-h1 font-extrabold tracking-tight">
+                        <span className="cosmic-text-gradient">${plan.price}</span>
                         {plan.originalPrice && (
-                          <span className="text-lg text-white/50 line-through ml-2">
+                          <span className="text-xl text-white/50 line-through ml-3">
                             ${plan.originalPrice}
                           </span>
                         )}
                       </div>
-                      <div className="text-white/60 text-sm">
+                      <div className="text-white/70 text-base font-semibold mt-2">
                         per {plan.billingPeriod}
                       </div>
                     </div>
@@ -260,11 +263,11 @@ export default function PricingPage() {
 
                 {/* Highlights */}
                 {plan.highlights.length > 0 && (
-                  <div className="flex flex-wrap gap-1 justify-center mb-4">
+                  <div className="flex flex-wrap gap-2 justify-center mb-6">
                     {plan.highlights.map((highlight) => (
                       <span
                         key={highlight}
-                        className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full"
+                        className="px-4 py-2 bg-purple-500/25 text-purple-200 text-sm rounded-xl font-semibold border border-purple-400/30"
                       >
                         {highlight}
                       </span>
@@ -274,11 +277,11 @@ export default function PricingPage() {
               </div>
 
               {/* Features */}
-              <div className="space-y-3 mb-6">
+              <div className="space-y-4 mb-8">
                 {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-3">
-                    <span className="text-green-400 flex-shrink-0 mt-0.5">✓</span>
-                    <span className="text-sm text-white/80">{feature}</span>
+                  <div key={feature} className="flex items-start gap-4">
+                    <span className="text-green-400 flex-shrink-0 mt-1 text-lg font-bold">✓</span>
+                    <span className="text-base text-white/85 font-medium leading-relaxed">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -287,24 +290,24 @@ export default function PricingPage() {
               <button
                 onClick={() => handleSubscribe(plan.id)}
                 disabled={isLoading === plan.id}
-                className={`w-full cosmic-button ${
+                className={`w-full cosmic-focus-ring font-bold text-lg min-h-[56px] transition-all duration-300 hover:scale-105 shadow-xl ${
                   plan.popular
-                    ? 'cosmic-button-primary'
+                    ? 'cosmic-button-premium cosmic-button-xl'
                     : plan.enterprise
-                    ? 'cosmic-button-accent'
-                    : 'cosmic-button-glass'
+                    ? 'cosmic-button cosmic-button-accent cosmic-button-xl'
+                    : 'cosmic-button cosmic-button-glass cosmic-button-lg border-2 border-white/30 hover:border-white/50'
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {isLoading === plan.id ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="cosmic-spinner mr-3"></div>
                     Processing...
                   </>
                 ) : (
                   <>
-                    {plan.id === 'starter' && <span className="mr-2">✨</span>}
-                    {plan.popular && <span className="mr-2">⭐</span>}
-                    {plan.enterprise && <span className="mr-2">🚀</span>}
+                    {plan.id === 'starter' && <span className="mr-3 text-xl">✨</span>}
+                    {plan.popular && <span className="mr-3 text-xl">⭐</span>}
+                    {plan.enterprise && <span className="mr-3 text-xl">🚀</span>}
                     {plan.cta}
                   </>
                 )}
@@ -314,66 +317,75 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="cosmic-card max-w-4xl mx-auto">
-          <h2 className="text-h3 font-bold text-center mb-8">Frequently Asked Questions</h2>
+        <section className="cosmic-card-premium max-w-5xl mx-auto cosmic-animate-slide-in-left p-10 border border-white/20" aria-labelledby="faq-heading">
+          <h2 id="faq-heading" className="text-h2 font-bold text-center mb-12 cosmic-text-gradient">Frequently Asked Questions</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold mb-2">Can I change plans anytime?</h3>
-              <p className="text-white/70 text-sm">
-                Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately.
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h3 className="font-bold mb-3 text-lg">Can I change plans anytime?</h3>
+              <p className="text-white/80 text-base leading-relaxed font-medium">
+                Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately with prorated billing.
               </p>
             </div>
             
-            <div>
-              <h3 className="font-semibold mb-2">Do unused generations roll over?</h3>
-              <p className="text-white/70 text-sm">
+            <div className="space-y-4">
+              <h3 className="font-bold mb-3 text-lg">Do unused generations roll over?</h3>
+              <p className="text-white/80 text-base leading-relaxed font-medium">
                 Unused generations expire at the end of each billing cycle. We recommend choosing a plan that fits your monthly usage.
               </p>
             </div>
             
-            <div>
-              <h3 className="font-semibold mb-2">What payment methods do you accept?</h3>
-              <p className="text-white/70 text-sm">
-                We accept all major credit cards, PayPal, and bank transfers for enterprise plans.
+            <div className="space-y-4">
+              <h3 className="font-bold mb-3 text-lg">What payment methods do you accept?</h3>
+              <p className="text-white/80 text-base leading-relaxed font-medium">
+                We accept all major credit cards, PayPal, and bank transfers for enterprise plans. Secure payment processing via Stripe.
               </p>
             </div>
             
-            <div>
-              <h3 className="font-semibold mb-2">Is there a free trial?</h3>
-              <p className="text-white/70 text-sm">
-                Our Starter plan is completely free with 5 generations per month. No credit card required.
+            <div className="space-y-4">
+              <h3 className="font-bold mb-3 text-lg">Is there a free trial?</h3>
+              <p className="text-white/80 text-base leading-relaxed font-medium">
+                Our Starter plan is completely free with 5 generations per month. No credit card required to get started.
               </p>
             </div>
             
-            <div>
-              <h3 className="font-semibold mb-2">Can I use generated images commercially?</h3>
-              <p className="text-white/70 text-sm">
+            <div className="space-y-4">
+              <h3 className="font-bold mb-3 text-lg">Can I use generated images commercially?</h3>
+              <p className="text-white/80 text-base leading-relaxed font-medium">
                 Yes! Creator plan and above include full commercial usage rights for all generated content.
               </p>
             </div>
             
-            <div className="space-y-3">
-              <h3 className="font-semibold text-white text-base">Do you offer refunds?</h3>
-              <p className="text-white/70 text-sm leading-relaxed">
-                We offer a 30-day money-back guarantee on all paid plans. Contact support for assistance.
+            <div className="space-y-4">
+              <h3 className="font-bold text-white text-lg mb-3">Do you offer refunds?</h3>
+              <p className="text-white/80 text-base leading-relaxed font-medium">
+                We offer a 30-day money-back guarantee on all paid plans. Contact support for immediate assistance.
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Trust Indicators */}
-        <div className="text-center mt-12">
-          <p className="text-white/60 text-sm mb-4">Trusted by creators worldwide</p>
-          <div className="flex items-center justify-center gap-8 text-white/40">
-            <div className="flex items-center gap-2">
-              <span className="text-yellow-400">⭐</span>
-              <span>4.9/5 Rating</span>
+        <div className="text-center mt-16">
+          <p className="text-white/75 text-lg mb-6 font-semibold">Trusted by creators worldwide</p>
+          <div className="cosmic-card-premium p-8 max-w-4xl mx-auto border border-white/20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white/80">
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-yellow-400 text-3xl">⭐</span>
+                <span className="text-2xl font-bold cosmic-text-gradient">4.9/5</span>
+                <span className="font-semibold">Rating</span>
+              </div>
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-purple-400 text-3xl">🎨</span>
+                <span className="text-2xl font-bold cosmic-text-gradient">50,000+</span>
+                <span className="font-semibold">Designs Created</span>
+              </div>
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-green-400 text-3xl">✅</span>
+                <span className="text-2xl font-bold cosmic-text-gradient">99.9%</span>
+                <span className="font-semibold">Uptime</span>
+              </div>
             </div>
-            <div>•</div>
-            <div>50,000+ Designs Created</div>
-            <div>•</div>
-            <div>99.9% Uptime</div>
           </div>
         </div>
       </div>

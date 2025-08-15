@@ -177,10 +177,10 @@
   --shadow-cosmic: 0 16px 64px rgba(11, 20, 38, 0.7);
   
   /* Professional Shadows for Interactive Elements */
-  --shadow-interactive-sm: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-interactive-md: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-interactive-lg: 0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
-  --shadow-interactive-xl: 0 12px 24px rgba(0, 0, 0, 0.18), 0 6px 12px rgba(0, 0, 0, 0.12);
+  --shadow-interactive-sm: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-interactive-md: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-interactive-lg: 0 8px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-interactive-xl: 0 12px 24px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.1);
   
   /* Glass Element Shadows */
   --shadow-glass-subtle: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -193,10 +193,33 @@
   --glow-green: 0 0 20px rgba(16, 185, 129, 0.3);
   --glow-gold: 0 0 20px rgba(245, 158, 11, 0.3);
   
-  /* Typography */
-  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+  /* Professional Depth Shadows */
+  --shadow-depth-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-depth-2: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+  --shadow-depth-3: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10);
+  --shadow-depth-4: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+  --shadow-depth-5: 0 20px 40px rgba(0, 0, 0, 0.10);
+  
+  /* Contextual Shadows */
+  --shadow-elevated: 0 25px 50px rgba(0, 0, 0, 0.25);
+  --shadow-floating: 0 32px 64px rgba(0, 0, 0, 0.12);
+  --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-focus: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  --shadow-active: inset 0 3px 7px rgba(0, 0, 0, 0.1);
+  
+  /* Typography - Enhanced Font Stack */
+  --font-display: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
+  
+  /* Advanced Typography Scale */
+  --type-scale-ratio: 1.2;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
   
   /* Gradients */
   --gradient-cosmic: linear-gradient(135deg, var(--cosmic-purple) 0%, var(--cosmic-pink) 100%);
@@ -213,16 +236,29 @@
   --radius-2xl: 1.5rem;     /* 24px - Large cards */
   --radius-3xl: 2rem;       /* 32px - Hero elements */
   
-  /* Animations */
+  /* Advanced Animation System */
+  --duration-instant: 100ms;
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --duration-slow: 350ms;
   --duration-slower: 500ms;
-  
+  --duration-glacial: 1000ms;
+
+  /* Professional Easing Curves */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-power: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
+  
+  /* Motion Design Tokens */
+  --motion-reduce: 0;
+  --motion-full: 1;
+  --stagger-delay: 0.1s;
+  --parallax-speed: 0.5;
 }
 
 /* ============================================================================
@@ -336,25 +372,31 @@ body {
 .text-display-large {
   font-size: clamp(2.5rem, 2.1rem + 2vw, 4.5rem);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
   background: var(--gradient-cosmic);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
 }
 
 .text-display-medium {
   font-size: clamp(2rem, 1.7rem + 1.5vw, 3.5rem);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  text-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  font-feature-settings: 'kern' 1, 'liga' 1;
 }
 
 .text-display-small {
   font-size: clamp(1.5rem, 1.3rem + 1vw, 2.5rem);
   font-weight: 600;
-  line-height: 1.3;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-normal);
+  font-feature-settings: 'kern' 1;
 }
 
 .text-h1 { font-size: clamp(2rem, 1.8rem + 1vw, 3rem); }
@@ -366,17 +408,20 @@ body {
 
 .text-body-large {
   font-size: clamp(1.125rem, 1.05rem + 0.375vw, 1.25rem);
-  line-height: 1.75;
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .text-body {
   font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  line-height: 1.6;
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .text-body-small {
   font-size: clamp(0.875rem, 0.85rem + 0.125vw, 1rem);
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 /* Text Gradients */
@@ -422,11 +467,18 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-interactive-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .cosmic-button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: var(--shadow-interactive-md);
+}
+
+.cosmic-button:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--duration-fast);
 }
 
 .cosmic-button-primary {
@@ -518,13 +570,30 @@ body {
   box-shadow: var(--shadow-glass-moderate);
   padding: 1.5rem;
   transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
 }
 
 .cosmic-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   background: var(--glass-interactive-medium);
-  box-shadow: var(--shadow-glass-strong);
+  box-shadow: var(--shadow-glass-strong), 0 0 32px rgba(99, 102, 241, 0.15);
   border-color: var(--border-cosmic);
+}
+
+.cosmic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.cosmic-card:hover::before {
+  opacity: 1;
 }
 
 .cosmic-card-hero {
@@ -734,6 +803,33 @@ body {
   100% { background-position: 200% center; }
 }
 
+@keyframes cosmic-fade-in {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cosmic-slide-in-left {
+  0% { opacity: 0; transform: translateX(-30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes cosmic-slide-in-right {
+  0% { opacity: 0; transform: translateX(30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes cosmic-scale-in {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes cosmic-bounce-in {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
 .cosmic-animate-drift { animation: cosmic-drift 120s linear infinite; }
 .cosmic-animate-pulse { animation: cosmic-pulse 3s ease-in-out infinite; }
 .cosmic-animate-glow { animation: stellar-glow 4s ease-in-out infinite; }
@@ -743,6 +839,137 @@ body {
   background-size: 200% 100%;
   animation: nebula-shimmer 2s infinite;
 }
+
+.cosmic-animate-fade-in { animation: cosmic-fade-in 0.6s var(--ease-out); }
+.cosmic-animate-slide-in-left { animation: cosmic-slide-in-left 0.6s var(--ease-out); }
+.cosmic-animate-slide-in-right { animation: cosmic-slide-in-right 0.6s var(--ease-out); }
+.cosmic-animate-scale-in { animation: cosmic-scale-in 0.4s var(--ease-out); }
+.cosmic-animate-bounce-in { animation: cosmic-bounce-in 0.6s var(--ease-bounce); }
+
+/* Staggered animations for lists */
+.cosmic-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.cosmic-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.cosmic-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.cosmic-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.cosmic-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.cosmic-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* ============================================================================
+   ADVANCED ANIMATION PATTERNS
+   ============================================================================ */
+
+/* Sophisticated Page Transitions */
+@keyframes cosmic-page-enter {
+  0% { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.98);
+    filter: blur(2px);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes cosmic-page-exit {
+  0% { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(1.02);
+    filter: blur(2px);
+  }
+}
+
+/* Advanced Hover Choreography */
+@keyframes cosmic-hover-lift {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-8px) scale(1.02); }
+}
+
+@keyframes cosmic-hover-glow {
+  0% { box-shadow: var(--shadow-depth-2); }
+  100% { box-shadow: var(--shadow-depth-4), var(--glow-purple); }
+}
+
+/* Sophisticated Loading Animations */
+@keyframes cosmic-skeleton-wave {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes cosmic-loading-dots {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Parallax Effects */
+@keyframes cosmic-parallax-slow {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-50px); }
+}
+
+@keyframes cosmic-parallax-medium {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-100px); }
+}
+
+@keyframes cosmic-parallax-fast {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-150px); }
+}
+
+/* Micro-interaction Animations */
+@keyframes cosmic-button-press {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes cosmic-icon-bounce {
+  0%, 20%, 60%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+  80% { transform: translateY(-3px); }
+}
+
+@keyframes cosmic-text-reveal {
+  0% { 
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(1px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Advanced Glass Morphism Effects */
+@keyframes cosmic-glass-breathe {
+  0%, 100% { 
+    backdrop-filter: blur(16px) saturate(180%);
+    background: var(--glass-interactive-light);
+  }
+  50% { 
+    backdrop-filter: blur(20px) saturate(200%);
+    background: var(--glass-interactive-medium);
+  }
+}
+
+/* Animation Classes */
+.cosmic-animate-page-enter { animation: cosmic-page-enter 0.6s var(--ease-expo); }
+.cosmic-animate-page-exit { animation: cosmic-page-exit 0.4s var(--ease-expo); }
+.cosmic-animate-hover-lift { animation: cosmic-hover-lift 0.3s var(--ease-out); }
+.cosmic-animate-button-press { animation: cosmic-button-press 0.2s var(--ease-out); }
+.cosmic-animate-icon-bounce { animation: cosmic-icon-bounce 0.6s var(--ease-bounce); }
+.cosmic-animate-text-reveal { animation: cosmic-text-reveal 0.8s var(--ease-out); }
+.cosmic-animate-glass-breathe { animation: cosmic-glass-breathe 4s ease-in-out infinite; }
 
 /* ============================================================================
    PARTICLES SYSTEM
@@ -795,10 +1022,455 @@ body {
 .cosmic-particle:nth-child(5) { animation-delay: 2s; }
 
 /* ============================================================================
-   RESPONSIVE DESIGN
+   ADVANCED LOADING STATES & PREMIUM COMPONENTS
    ============================================================================ */
 
-@media (max-width: 640px) {
+/* Professional Loading Skeletons */
+.cosmic-skeleton-advanced {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 400% 100%;
+  animation: cosmic-skeleton-wave 2s ease-in-out infinite;
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmic-skeleton-advanced::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  animation: cosmic-skeleton-wave 1.5s ease-in-out infinite;
+}
+
+/* Advanced Loading Dots */
+.cosmic-loading-advanced {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cosmic-loading-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+  border-radius: 50%;
+  animation: cosmic-loading-dots 1.4s ease-in-out infinite;
+}
+
+.cosmic-loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.cosmic-loading-dot:nth-child(2) { animation-delay: -0.16s; }
+.cosmic-loading-dot:nth-child(3) { animation-delay: 0s; }
+
+/* Premium Button States */
+.cosmic-button-premium {
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient-cosmic);
+  color: white;
+  box-shadow: var(--shadow-depth-3);
+  transition: all var(--duration-normal) var(--ease-expo);
+}
+
+.cosmic-button-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transition: left var(--duration-slow) var(--ease-out);
+}
+
+.cosmic-button-premium:hover::before {
+  left: 100%;
+}
+
+.cosmic-button-premium:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-depth-5), var(--glow-purple);
+}
+
+.cosmic-button-premium:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--duration-fast);
+}
+
+/* Advanced Cards with Depth */
+.cosmic-card-premium {
+  background: var(--glass-interactive-medium);
+  backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid var(--border-cosmic);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-depth-3);
+  padding: 2rem;
+  transition: all var(--duration-normal) var(--ease-expo);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmic-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.cosmic-card-premium:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-elevated), 0 0 40px rgba(99, 102, 241, 0.2);
+  background: var(--glass-interactive-strong);
+}
+
+.cosmic-card-premium:hover::before {
+  opacity: 1;
+}
+
+/* Advanced Input States */
+.cosmic-input-premium {
+  background: var(--glass-form-element);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border-stellar);
+  border-radius: var(--radius-lg);
+  color: white;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  transition: all var(--duration-normal) var(--ease-expo);
+  box-shadow: var(--shadow-depth-1);
+  position: relative;
+}
+
+.cosmic-input-premium:focus {
+  outline: none;
+  background: var(--glass-interactive-medium);
+  border-color: var(--cosmic-purple);
+  box-shadow: var(--shadow-depth-2), var(--shadow-focus);
+  transform: translateY(-1px);
+}
+
+.cosmic-input-premium:hover {
+  background: var(--glass-interactive-light);
+  border-color: var(--border-cosmic);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-depth-2);
+}
+
+/* Professional Status Indicators */
+.cosmic-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+  border: 1px solid transparent;
+}
+
+.cosmic-status-success {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.cosmic-status-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.cosmic-status-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.cosmic-status-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+/* Advanced Tooltip System */
+.cosmic-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.cosmic-tooltip-content {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--glass-interactive-strong);
+  backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid var(--border-cosmic);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  box-shadow: var(--shadow-depth-3);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--duration-normal) var(--ease-expo);
+  z-index: 1000;
+}
+
+.cosmic-tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--border-cosmic);
+}
+
+.cosmic-tooltip:hover .cosmic-tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* ============================================================================
+   LOADING STATES & UTILITIES
+   ============================================================================ */
+
+/* Improved Loading Spinners */
+.cosmic-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.cosmic-spinner-lg {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+}
+
+.cosmic-spinner-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 1.5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Skeleton Loading */
+.cosmic-skeleton {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: cosmic-skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes cosmic-skeleton-pulse {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Interactive States */
+.cosmic-interactive {
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.cosmic-interactive:hover {
+  transform: translateY(-2px);
+}
+
+.cosmic-interactive:active {
+  transform: translateY(0);
+}
+
+/* Focus States for Accessibility */
+.cosmic-focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+.cosmic-focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+/* Error States */
+.cosmic-error {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.cosmic-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Success States */
+.cosmic-success {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Warning States */
+.cosmic-warning {
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Status Indicators */
+.cosmic-status-online {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.cosmic-status-offline {
+  background: #6b7280;
+}
+
+.cosmic-status-busy {
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+/* Progress Bars */
+.cosmic-progress {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.cosmic-progress-bar {
+  background: var(--gradient-cosmic);
+  height: 100%;
+  border-radius: inherit;
+  transition: width var(--duration-slow) var(--ease-out);
+  position: relative;
+}
+
+.cosmic-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progress-shimmer 2s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ============================================================================
+   ADVANCED RESPONSIVE DESIGN
+   ============================================================================ */
+
+/* Mobile-First Enhanced Breakpoints */
+@media (max-width: 480px) {
+  /* Extra small screens - Enhanced mobile experience */
+  .cosmic-orb { 
+    filter: blur(30px); 
+    opacity: 0.6;
+  }
+  .cosmic-orb-1 { width: 150px; height: 150px; }
+  .cosmic-orb-2 { width: 120px; height: 120px; }
+  .cosmic-orb-3 { width: 100px; height: 100px; }
+  .cosmic-orb-4 { width: 110px; height: 110px; }
+  .cosmic-orb-5 { width: 140px; height: 140px; }
+  
+  /* Enhanced glass effects for small screens */
+  .cosmic-glass,
+  .cosmic-glass-light,
+  .cosmic-glass-medium,
+  .cosmic-glass-strong,
+  .cosmic-card-premium {
+    backdrop-filter: blur(6px) saturate(130%);
+    -webkit-backdrop-filter: blur(6px) saturate(130%);
+  }
+  
+  /* Optimized spacing for very small screens */
+  .cosmic-card-premium { padding: 1.5rem; }
+  .cosmic-card-hero { padding: 2rem 1.5rem; }
+  
+  /* Touch-optimized buttons */
+  .cosmic-button,
+  .cosmic-button-premium { 
+    min-height: 52px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .cosmic-button-xl {
+    min-height: 64px;
+    padding: 1.25rem 2rem;
+    font-size: 1.125rem;
+  }
+  
+  /* Enhanced mobile typography */
+  .text-display-large { font-size: clamp(2.5rem, 8vw, 3.5rem); }
+  .text-display-medium { font-size: clamp(2rem, 6vw, 3rem); }
+  .text-display-small { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+  
+  /* Mobile input improvements */
+  .cosmic-input,
+  .cosmic-input-premium {
+    min-height: 56px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 1rem 1.25rem;
+  }
+  
+  /* Mobile tooltips - disable on touch devices */
+  .cosmic-tooltip-content {
+    display: none;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 640px) {
+  /* Small screens - Tablet portrait */
   .cosmic-orb { filter: blur(40px); }
   .cosmic-orb-1 { width: 200px; height: 200px; }
   .cosmic-orb-2 { width: 150px; height: 150px; }
@@ -809,12 +1481,130 @@ body {
   .cosmic-glass,
   .cosmic-glass-light,
   .cosmic-glass-medium,
-  .cosmic-glass-strong {
+  .cosmic-glass-strong,
+  .cosmic-card-premium {
     backdrop-filter: blur(8px) saturate(150%);
     -webkit-backdrop-filter: blur(8px) saturate(150%);
   }
+  
+  /* Improved spacing for small tablets */
+  .cosmic-card-premium { padding: 1.25rem; }
+  .cosmic-card-hero { padding: 2rem 1.5rem; }
+  
+  /* Better buttons for small tablets */
+  .cosmic-button,
+  .cosmic-button-premium { 
+    min-height: 44px;
+    padding: 0.875rem 1.25rem;
+  }
+  
+  .cosmic-button-lg {
+    min-height: 56px;
+    padding: 1rem 1.5rem;
+  }
 }
 
+@media (min-width: 641px) and (max-width: 768px) {
+  /* Medium screens - Tablet landscape */
+  .cosmic-card-premium { padding: 1.5rem; }
+  
+  /* Enhanced hover states for devices with precise pointing */
+  .cosmic-button-premium:hover,
+  .cosmic-card-premium:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Large screens - Small desktop */
+  .cosmic-card-premium { padding: 1.75rem; }
+  
+  /* Full hover and animation effects */
+  .cosmic-button-premium:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+  
+  .cosmic-card-premium:hover {
+    transform: translateY(-6px) scale(1.01);
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Extra large screens - Full desktop experience */
+  .cosmic-card-premium { padding: 2rem; }
+  
+  /* Enhanced animations for large screens */
+  .cosmic-button-premium:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+  
+  .cosmic-card-premium:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+  
+  /* Parallax effects for large screens */
+  .cosmic-parallax-bg {
+    transform: translateY(calc(var(--scroll-y) * var(--parallax-speed)));
+  }
+}
+
+/* High DPI / Retina Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .cosmic-glass,
+  .cosmic-glass-light,
+  .cosmic-glass-medium,
+  .cosmic-glass-strong,
+  .cosmic-card-premium {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  
+  /* Enhanced shadows for high DPI */
+  .cosmic-card-premium {
+    box-shadow: var(--shadow-depth-3), 0 0 20px rgba(99, 102, 241, 0.1);
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cosmic-deep-space: #050B1A;
+    --cosmic-void-black: #020617;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .cosmic-card-premium {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .cosmic-button-premium {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Print styles */
+@media print {
+  .cosmic-orb,
+  .cosmic-particles,
+  .cosmic-moving-background {
+    display: none !important;
+  }
+  
+  .cosmic-card-premium {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+}
+
+/* ============================================================================
+   ADVANCED ACCESSIBILITY & INCLUSIVE DESIGN
+   ============================================================================ */
+
+/* Reduced Motion Preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -822,5 +1612,409 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable all cosmic animations for users who prefer reduced motion */
+  .cosmic-animate-fade-in,
+  .cosmic-animate-slide-in-left,
+  .cosmic-animate-slide-in-right,
+  .cosmic-animate-scale-in,
+  .cosmic-animate-bounce-in,
+  .cosmic-animate-page-enter,
+  .cosmic-animate-page-exit,
+  .cosmic-animate-hover-lift,
+  .cosmic-animate-button-press,
+  .cosmic-animate-icon-bounce,
+  .cosmic-animate-text-reveal,
+  .cosmic-animate-glass-breathe {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  /* Disable orb movements */
+  .cosmic-orb {
+    animation: none !important;
+  }
+  
+  /* Disable particle animations */
+  .cosmic-particle {
+    animation: none !important;
+    opacity: 0.3 !important;
   }
 }
+
+/* Enhanced Focus Management */
+.cosmic-focus-enhanced:focus-visible {
+  outline: 3px solid var(--cosmic-purple);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+/* Keyboard Navigation Enhancements */
+.cosmic-focus-ring:focus-visible {
+  outline: 2px solid var(--cosmic-purple);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+/* Skip to content link for screen readers */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--cosmic-purple);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+  top: 6px;
+}
+
+/* Enhanced contrast for accessibility */
+.high-contrast {
+  --glass-interactive-light: rgba(255, 255, 255, 0.2);
+  --glass-interactive-medium: rgba(255, 255, 255, 0.3);
+  --glass-interactive-strong: rgba(255, 255, 255, 0.4);
+  --border-cosmic: rgba(255, 255, 255, 0.4);
+  --border-stellar: rgba(255, 255, 255, 0.3);
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Aria live regions for dynamic content */
+.aria-live-polite {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Enhanced button states for accessibility */
+.cosmic-button-premium:disabled,
+.cosmic-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.cosmic-button-premium[aria-pressed="true"],
+.cosmic-button[aria-pressed="true"] {
+  background: var(--cosmic-purple);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Form validation states */
+.cosmic-input-premium[aria-invalid="true"],
+.cosmic-input[aria-invalid="true"] {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.cosmic-input-premium[aria-invalid="false"],
+.cosmic-input[aria-invalid="false"] {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Loading states for screen readers */
+.loading-announcement {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Enhanced tooltip accessibility */
+.cosmic-tooltip[aria-describedby] .cosmic-tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================ */
+
+/* GPU acceleration for smooth animations */
+.cosmic-card-premium,
+.cosmic-button-premium,
+.cosmic-orb {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimize repaints */
+.cosmic-skeleton-advanced {
+  contain: layout style paint;
+}
+
+/* Optimize scroll performance */
+.cosmic-scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Image optimization */
+.cosmic-image-optimized {
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Text rendering optimization */
+.cosmic-text-optimized {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-display: swap;
+}
+
+/* ============================================================================
+   MOBILE & ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/* Improved touch targets for mobile */
+@media (max-width: 768px) {
+  .cosmic-interactive {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .cosmic-button {
+    min-height: 48px;
+    padding: 0.875rem 1.25rem;
+  }
+  
+  .cosmic-button-lg {
+    min-height: 52px;
+    padding: 1rem 1.5rem;
+  }
+  
+  .cosmic-button-xl {
+    min-height: 56px;
+    padding: 1.125rem 1.75rem;
+  }
+  
+  /* Better mobile card spacing */
+  .cosmic-card-premium {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  
+  /* Enhanced mobile input styling */
+  .cosmic-input-premium {
+    min-height: 56px;
+    padding: 1rem 1.25rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Mobile grid improvements */
+  .grid {
+    gap: 1rem;
+  }
+  
+  /* Better mobile typography */
+  .text-display-large { 
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  
+  .text-display-medium { 
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Enhanced focus states for better accessibility */
+.cosmic-focus-ring:focus-visible {
+  outline: 2px solid var(--cosmic-purple);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.1);
+}
+
+/* High contrast mode improvements */
+@media (prefers-contrast: high) {
+  .cosmic-card-premium {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .cosmic-button-premium {
+    border: 2px solid rgba(255, 255, 255, 0.4);
+  }
+  
+  .cosmic-focus-ring:focus-visible {
+    outline-width: 3px;
+    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.4);
+  }
+}
+
+/* Performance optimizations for animations */
+.cosmic-card-premium,
+.cosmic-button-premium,
+.cosmic-animate-scale-in,
+.cosmic-animate-fade-in {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Better loading states */
+.cosmic-loading-state {
+  background: var(--glass-interactive-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.cosmic-loading-state::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: cosmic-skeleton-wave 1.5s infinite;
+}
+
+/* Improved error states */
+.cosmic-error-state {
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.cosmic-success-state {
+  background: rgba(16, 185, 129, 0.1);
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+/* ============================================================================
+   CONSISTENT SPACING & SIZING SYSTEM
+   ============================================================================ */
+
+/* Professional spacing consistency utilities */
+.space-section { margin-bottom: 3rem; }
+.space-section-lg { margin-bottom: 4rem; }
+.space-component { margin-bottom: 1.5rem; }
+.space-component-lg { margin-bottom: 2rem; }
+.space-element { margin-bottom: 1rem; }
+
+/* Consistent minimum heights for interactive elements */
+.min-touch-target { min-height: 44px; min-width: 44px; }
+.min-button-height { min-height: 52px; }
+.min-button-height-lg { min-height: 64px; }
+.min-input-height { min-height: 56px; }
+
+/* Professional grid spacing */
+.grid-spacing-tight { gap: 1rem; }
+.grid-spacing-normal { gap: 1.5rem; }
+.grid-spacing-wide { gap: 2rem; }
+.grid-spacing-extra-wide { gap: 3rem; }
+
+/* Consistent card padding system */
+.card-padding-sm { padding: 1rem; }
+.card-padding { padding: 1.5rem; }
+.card-padding-lg { padding: 2rem; }
+.card-padding-xl { padding: 3rem; }
+
+/* Professional responsive utilities */
+@media (max-width: 768px) {
+  .space-section { margin-bottom: 2rem; }
+  .space-section-lg { margin-bottom: 3rem; }
+  .space-component { margin-bottom: 1rem; }
+  .space-component-lg { margin-bottom: 1.5rem; }
+  
+  .grid-spacing-normal { gap: 1rem; }
+  .grid-spacing-wide { gap: 1.5rem; }
+  .grid-spacing-extra-wide { gap: 2rem; }
+  
+  .card-padding { padding: 1rem; }
+  .card-padding-lg { padding: 1.5rem; }
+  .card-padding-xl { padding: 2rem; }
+}
+
+/* Prevent layout shifts and improve stability */
+.layout-stable {
+  contain: layout style;
+  will-change: auto;
+}
+
+.prevent-layout-shift {
+  contain: layout;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Professional loading states to prevent content jumps */
+.content-placeholder {
+  min-height: 2rem;
+  background: var(--glass-interactive-light);
+  border-radius: var(--radius-md);
+  animation: cosmic-skeleton-pulse 1.5s infinite;
+}
+
+.button-stable {
+  min-height: 52px;
+  min-width: 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-stable {
+  min-height: 56px;
+  box-sizing: border-box;
+}
+
+/* Enhanced visual hierarchy */
+.text-hierarchy-1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.2; }
+.text-hierarchy-2 { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; line-height: 1.3; }
+.text-hierarchy-3 { font-size: clamp(1.25rem, 2.5vw, 2rem); font-weight: 600; line-height: 1.4; }
+.text-hierarchy-4 { font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 600; line-height: 1.5; }
+.text-hierarchy-5 { font-size: clamp(1rem, 1.5vw, 1.25rem); font-weight: 500; line-height: 1.5; }
+
+/* Professional component sizing */
+.component-height-sm { min-height: 2rem; }
+.component-height { min-height: 3rem; }
+.component-height-lg { min-height: 4rem; }
+.component-height-xl { min-height: 6rem; }
+
+/* Consistent border radius system */
+.radius-system-sm { border-radius: 0.375rem; }
+.radius-system { border-radius: 0.75rem; }
+.radius-system-lg { border-radius: 1rem; }
+.radius-system-xl { border-radius: 1.5rem; }

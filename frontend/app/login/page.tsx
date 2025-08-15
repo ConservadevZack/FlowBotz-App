@@ -85,7 +85,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center pt-24 pb-12">
+    <div className="min-h-screen flex items-center justify-center pt-20 pb-12">
       <FloatingNavbar />
       {/* Moving background */}
       <div className="cosmic-moving-background">
@@ -96,104 +96,113 @@ export default function LoginPage() {
         <div className="cosmic-orb cosmic-orb-5"></div>
       </div>
 
-      <div className="max-w-md w-full mx-auto px-4">
-        <div className="cosmic-card-hero text-center">
+      <div className="max-w-lg w-full mx-auto px-4 relative z-10">
+        <div className="cosmic-card-premium text-center cosmic-animate-page-enter p-8 sm:p-10 border border-white/20">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-display-medium cosmic-text-gradient mb-2">
+          <div className="mb-10">
+            <h1 className="text-3xl sm:text-4xl cosmic-text-gradient mb-6 font-bold">
               Welcome Back
             </h1>
-            <p className="text-body text-white/70">
+            <p className="text-lg text-white/80 font-medium leading-relaxed max-w-md mx-auto">
               Sign in to continue creating amazing AI designs
             </p>
           </div>
 
           {/* General Error */}
           {errors.general && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 flex items-center gap-3" style={{ borderRadius: 'var(--radius-xl)' }}>
-              <span className="text-red-400 flex-shrink-0">⚠️</span>
-              <span className="text-red-400 text-sm">{errors.general}</span>
+            <div className="mb-8 p-5 bg-red-500/15 border-2 border-red-500/30 flex items-center gap-4 cosmic-animate-fade-in rounded-xl" role="alert" aria-live="polite">
+              <span className="text-red-400 flex-shrink-0 text-xl">⚠️</span>
+              <span className="text-red-400 text-base font-semibold">{errors.general}</span>
             </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2 text-left">
+              <label htmlFor="email" className="block text-base font-semibold mb-3 text-left">
                 Email Address
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50">✉️</span>
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 text-lg">✉️</span>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`cosmic-input w-full pl-10 pr-4 py-3 ${
+                  className={`cosmic-input-premium cosmic-focus-ring w-full pl-12 pr-4 py-4 text-base font-medium min-h-[56px] ${
                     errors.email 
-                      ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50' 
+                      ? 'cosmic-error border-red-500/50 bg-red-500/10' 
                       : ''
                   }`}
                   placeholder="Enter your email"
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  aria-invalid={errors.email ? 'true' : 'false'}
+                  autoComplete="email"
+                  required
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-400 text-left">{errors.email}</p>
+                <p id="email-error" className="mt-3 text-base text-red-400 text-left cosmic-animate-fade-in font-semibold" role="alert">{errors.email}</p>
               )}
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2 text-left">
+              <label htmlFor="password" className="block text-base font-semibold mb-3 text-left">
                 Password
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50">🔒</span>
+                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 text-lg">🔒</span>
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleChange}
-                  className={`cosmic-input w-full pl-10 pr-12 py-3 ${
+                  className={`cosmic-input-premium cosmic-focus-ring w-full pl-12 pr-16 py-4 text-base font-medium min-h-[56px] ${
                     errors.password 
-                      ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50' 
+                      ? 'cosmic-error border-red-500/50 bg-red-500/10' 
                       : ''
                   }`}
                   placeholder="Enter your password"
+                  aria-describedby={errors.password ? 'password-error' : undefined}
+                  aria-invalid={errors.password ? 'true' : 'false'}
+                  autoComplete="current-password"
+                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors duration-300 p-1 rounded cosmic-focus-ring"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
-                    <span>🙈</span>
+                    <span className="text-xl">🙈</span>
                   ) : (
-                    <span>👁️</span>
+                    <span className="text-xl">👁️</span>
                   )}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-400 text-left">{errors.password}</p>
+                <p id="password-error" className="mt-3 text-base text-red-400 text-left cosmic-animate-fade-in font-semibold" role="alert">{errors.password}</p>
               )}
             </div>
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center">
+              <label className="flex items-center group cursor-pointer">
                 <input
                   type="checkbox"
                   name="rememberMe"
                   checked={formData.rememberMe}
                   onChange={handleChange}
-                  className="cosmic-checkbox"
+                  className="cosmic-checkbox w-5 h-5"
                 />
-                <span className="ml-2 text-sm text-white/70">Remember me</span>
+                <span className="ml-3 text-base text-white/80 font-medium group-hover:text-white transition-colors duration-300">Remember me</span>
               </label>
-              <Link href="/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+              <Link href="/forgot-password" className="text-base text-purple-300 hover:text-purple-200 transition-colors duration-300 font-semibold cosmic-focus-ring rounded px-2 py-1">
                 Forgot password?
               </Link>
             </div>
@@ -202,33 +211,36 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full cosmic-button cosmic-button-primary cosmic-button-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full cosmic-button-premium cosmic-button-xl cosmic-focus-ring disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg min-h-[64px] shadow-2xl hover:scale-105 transition-all duration-300"
             >
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  <div className="cosmic-spinner mr-3"></div>
                   Signing In...
                 </>
               ) : (
-                'Sign In'
+                <>
+                  <span className="mr-3">🔑</span>
+                  Sign In
+                </>
               )}
             </button>
           </form>
 
           {/* Divider */}
           <div className="my-8 flex items-center">
-            <div className="flex-1 border-t border-white/10"></div>
-            <div className="px-4 text-white/50 text-sm">Or continue with</div>
-            <div className="flex-1 border-t border-white/10"></div>
+            <div className="flex-1 border-t border-white/20"></div>
+            <div className="px-6 text-white/70 text-base font-semibold">Or continue with</div>
+            <div className="flex-1 border-t border-white/20"></div>
           </div>
 
           {/* Social Login */}
           <div className="space-y-3">
             <button
               onClick={handleGoogleSignIn}
-              className="w-full cosmic-button cosmic-button-glass flex items-center justify-center gap-3"
+              className="w-full cosmic-button cosmic-button-glass cosmic-focus-ring flex items-center justify-center gap-4 min-h-[56px] font-semibold text-base border-2 border-white/20 hover:border-white/40 hover:scale-105 transition-all duration-300"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -237,8 +249,8 @@ export default function LoginPage() {
               Continue with Google
             </button>
 
-            <button className="w-full cosmic-button cosmic-button-glass flex items-center justify-center gap-3">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <button className="w-full cosmic-button cosmic-button-glass cosmic-focus-ring flex items-center justify-center gap-4 min-h-[56px] font-semibold text-base border-2 border-white/20 hover:border-white/40 hover:scale-105 transition-all duration-300">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
               Continue with Facebook
@@ -246,11 +258,11 @@ export default function LoginPage() {
           </div>
 
           {/* Sign Up Link */}
-          <div className="mt-8 pt-6 border-t border-white/10">
-            <p className="text-white/70">
+          <div className="mt-8 pt-6 border-t border-white/20">
+            <p className="text-white/80 text-base font-medium">
               Don't have an account?{' '}
-              <Link href="/signup" className="text-purple-400 hover:text-purple-300 transition-colors font-medium">
-                Sign up for free
+              <Link href="/signup" className="text-purple-300 hover:text-purple-200 transition-colors font-bold cosmic-focus-ring rounded px-2 py-1">
+                Sign up for free →
               </Link>
             </p>
           </div>

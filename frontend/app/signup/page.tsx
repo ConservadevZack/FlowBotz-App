@@ -130,7 +130,7 @@ export default function SignUpPage() {
       </div>
 
       <div className="max-w-md w-full mx-auto px-4">
-        <div className="cosmic-card-hero text-center">
+        <div className="cosmic-card-hero text-center cosmic-animate-scale-in">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-display-medium cosmic-text-gradient mb-2">
@@ -143,7 +143,7 @@ export default function SignUpPage() {
 
           {/* General Error */}
           {errors.general && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 flex items-center gap-3" style={{ borderRadius: 'var(--radius-xl)' }}>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 flex items-center gap-3 cosmic-animate-fade-in" style={{ borderRadius: 'var(--radius-xl)' }}>
               <span className="text-red-400 flex-shrink-0">⚠️</span>
               <span className="text-red-400 text-sm">{errors.general}</span>
             </div>
@@ -364,11 +364,11 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full cosmic-button cosmic-button-primary cosmic-button-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full cosmic-button cosmic-button-primary cosmic-button-lg cosmic-focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  <div className="cosmic-spinner cosmic-spinner-sm mr-2"></div>
                   Creating Account...
                 </>
               ) : (

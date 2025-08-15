@@ -50,6 +50,42 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
         token = credentials.credentials
+        
+        # For development: if it's a Supabase token (starts with "ey"), validate with Supabase API
+        if token.startswith("ey"):
+            try:
+                # Use Supabase client to verify the token
+                import httpx
+                supabase_url = os.getenv("SUPABASE_URL")
+                supabase_anon_key = os.getenv("SUPABASE_ANON_KEY")
+                
+                if supabase_url and supabase_anon_key:
+                    # Verify token with Supabase
+                    response = httpx.get(
+                        f"{supabase_url}/auth/v1/user",
+                        headers={
+                            "Authorization": f"Bearer {token}",
+                            "apikey": supabase_anon_key
+                        },
+                        timeout=5.0
+                    )
+                    
+                    if response.status_code == 200:
+                        user_data = response.json()
+                        return {
+                            "sub": user_data.get("email", user_data.get("id")),
+                            "email": user_data.get("email"),
+                            "user_id": user_data.get("id"),
+                            "role": "authenticated",
+                            "aud": "authenticated",
+                            "exp": None,  # Let Supabase handle expiration
+                            "iat": None
+                        }
+            except Exception as e:
+                print(f"Supabase token verification failed: {e}")
+                pass  # Fall through to backend JWT
+        
+        # Fallback to backend JWT for local development
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
         if email is None:

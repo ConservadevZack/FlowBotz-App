@@ -48,7 +48,7 @@ export default function AuthCallback() {
             console.log('OAuth success! User:', data.session.user.email)
             // Small delay to ensure session is fully established
             setTimeout(() => {
-              router.push('/create')
+              router.push('/creator')
             }, 1000)
             return
           }
@@ -66,7 +66,7 @@ export default function AuthCallback() {
 
         if (data.session && data.session.user) {
           console.log('Existing session found! User:', data.session.user.email)
-          router.push('/create')
+          router.push('/creator')
         } else {
           console.log('No session found, redirecting to login')
           setTimeout(() => {
