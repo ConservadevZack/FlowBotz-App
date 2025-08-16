@@ -58,7 +58,6 @@ export default function LoginPage() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#0B1426',
       color: '#fff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
@@ -76,9 +75,12 @@ export default function LoginPage() {
         <div style={{
           width: '100%',
           maxWidth: '420px',
-          background: 'rgba(255, 255, 255, 0.08)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
+          background: 'rgba(255, 255, 255, 0.12)',
+          backdropFilter: 'blur(24px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.8)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.3)',
+          willChange: 'backdrop-filter',
           borderRadius: '20px',
           padding: '40px',
           boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'

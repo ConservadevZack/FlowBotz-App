@@ -132,8 +132,7 @@ export default function CreatorPage() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#0B1426',
-      color: '#fff',
+            color: '#fff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
       <Navigation />
