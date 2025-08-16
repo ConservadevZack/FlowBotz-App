@@ -1,19 +1,13 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
-import ProtectedRoute from '@/components/ProtectedRoute'
-import FloatingNavbar from '@/components/FloatingNavbar'
-import PaymentModal from '@/components/PaymentModal'
-import ImageDialog from '@/components/ImageDialog'
-import ProductDesignOverlay from '@/components/ProductDesignOverlay'
-import { useAuth } from '@/components/AuthProvider'
+import { useState } from 'react'
+import Navigation from '../components/Navigation'
 
 // Product data
 const products = [
   {
     id: 1,
     name: "Premium T-Shirt",
-    image: "/api/placeholder/300/300",
     category: "Apparel",
     variants: [
       { id: "ts-s", name: "Small", price: 24.99 },
@@ -25,7 +19,6 @@ const products = [
   {
     id: 2,
     name: "Canvas Tote Bag",
-    image: "/api/placeholder/300/300",
     category: "Accessories",
     variants: [
       { id: "tb-reg", name: "Regular", price: 18.99 },
@@ -35,7 +28,6 @@ const products = [
   {
     id: 3,
     name: "Coffee Mug",
-    image: "/api/placeholder/300/300",
     category: "Drinkware",
     variants: [
       { id: "mug-11", name: "11oz", price: 16.99 },
@@ -45,7 +37,6 @@ const products = [
   {
     id: 4,
     name: "Poster Print",
-    image: "/api/placeholder/300/300",
     category: "Wall Art",
     variants: [
       { id: "poster-12x16", name: "12\" x 16\"", price: 15.99 },
@@ -55,21 +46,13 @@ const products = [
   }
 ]
 
-export default function SimplifiedCreatorPage() {
-  const { user } = useAuth()
+export default function CreatorPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [prompt, setPrompt] = useState('')
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [selectedVariant, setSelectedVariant] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
-  const [showPaymentModal, setShowPaymentModal] = useState(false)
-  const [showImageDialog, setShowImageDialog] = useState(false)
-  const [orderTotal, setOrderTotal] = useState(0)
-  const [accurateMockup, setAccurateMockup] = useState<string | null>(null)
-  const [isGeneratingMockup, setIsGeneratingMockup] = useState(false)
-  const [productSpecs, setProductSpecs] = useState<any>(null)
-  const [loadingSpecs, setLoadingSpecs] = useState(false)
 
   const handleGenerateImage = async () => {
     if (!prompt.trim()) return
@@ -77,7 +60,7 @@ export default function SimplifiedCreatorPage() {
     setIsGenerating(true)
     try {
       // Get Supabase session token
-      const { supabase } = await import('@/lib/supabase')
+      const { supabase } = await import('../../lib/supabase')
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error || !session?.access_token) {
@@ -121,98 +104,13 @@ export default function SimplifiedCreatorPage() {
     setCurrentStep(3)
   }
 
-  const generateAccurateMockup = async () => {
-    if (!selectedProduct || !generatedImage) return
-    
-    setIsGeneratingMockup(true)
-    try {
-      // Get Supabase session token
-      const { supabase } = await import('@/lib/supabase')
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error || !session?.access_token) {
-        console.error('User not authenticated for mockup generation')
-        setCurrentStep(4)
-        return
-      }
-      
-      const response = await fetch('http://localhost:8000/api/mockup/generate', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          productId: selectedProduct.id,
-          designImageUrl: generatedImage,
-          variantId: selectedVariant
-        })
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setAccurateMockup(data.mockupUrl || data.url)
-      } else {
-        console.error('Mockup generation failed:', response.status, await response.text())
-      }
-      setCurrentStep(4)
-    } catch (error) {
-      console.error('Error generating mockup:', error)
-      setCurrentStep(4)
-    } finally {
-      setIsGeneratingMockup(false)
-    }
-  }
-
-  const loadProductSpecs = async (productId: number) => {
-    setLoadingSpecs(true)
-    try {
-      // Get Supabase session token
-      const { supabase } = await import('@/lib/supabase')
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error || !session?.access_token) {
-        console.error('User not authenticated for product specs')
-        setLoadingSpecs(false)
-        return
-      }
-      
-      const response = await fetch(`http://localhost:8000/api/pod/product-specs/${productId}?provider=printful`, {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      })
-      if (response.ok) {
-        const specsData = await response.json()
-        setProductSpecs(specsData.specifications)
-      } else {
-        console.error('Failed to load product specs:', response.status, await response.text())
-      }
-    } catch (error) {
-      console.error('Error loading product specifications:', error)
-    } finally {
-      setLoadingSpecs(false)
-    }
-  }
-
   const handleOrderProduct = () => {
     if (!selectedProduct || !selectedVariant || !generatedImage) return
     
     const variant = selectedProduct.variants.find(v => v.id === selectedVariant)
     if (!variant) return
     
-    const productCost = variant.price
-    const shippingCost = 4.99
-    const total = productCost + shippingCost
-    
-    setOrderTotal(total)
-    setShowPaymentModal(true)
-  }
-
-  const handlePaymentSuccess = (paymentIntent: any) => {
-    console.log('Payment successful:', paymentIntent)
-    alert('Order placed successfully! You will receive an email confirmation.')
-    setShowPaymentModal(false)
+    alert(`Order placed for ${selectedProduct.name} (${variant.name}) - $${variant.price}!\nThis is a demo - payment processing will be implemented soon.`)
     
     // Reset to step 1 for new design
     setCurrentStep(1)
@@ -220,67 +118,90 @@ export default function SimplifiedCreatorPage() {
     setGeneratedImage(null)
     setSelectedProduct(null)
     setSelectedVariant('')
-    setAccurateMockup(null)
-  }
-
-  const handlePaymentError = (error: string) => {
-    console.error('Payment failed:', error)
-    alert(`Payment failed: ${error}`)
   }
 
   const getStepTitle = () => {
     switch (currentStep) {
       case 1: return "Step 1: Describe Your Design"
       case 2: return "Step 2: Choose Your Product"
-      case 3: return "Step 3: Preview Your Design"
-      case 4: return "Step 4: Complete Your Order"
+      case 3: return "Step 3: Complete Your Order"
       default: return "Create Your Design"
     }
   }
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen pt-16 pb-8">
-        <FloatingNavbar />
-        
-        {/* Moving background */}
-        <div className="cosmic-moving-background">
-          <div className="cosmic-orb cosmic-orb-1"></div>
-          <div className="cosmic-orb cosmic-orb-2"></div>
-          <div className="cosmic-orb cosmic-orb-3"></div>
-          <div className="cosmic-orb cosmic-orb-4"></div>
-          <div className="cosmic-orb cosmic-orb-5"></div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#0B1426',
+      color: '#fff',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
+      <Navigation />
+      
+      <div style={{ paddingTop: '100px', padding: '100px 24px 60px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          
           {/* Header */}
-          <div className="text-center mb-10">
-            <div className="cosmic-card-premium p-8 sm:p-10">
-              <h1 className="text-display-medium cosmic-text-gradient mb-6 tracking-tight">
-                {getStepTitle()}
-              </h1>
-              <p className="text-lg text-white/80 max-w-3xl mx-auto leading-relaxed">
-                Transform your imagination into beautiful, custom products with AI-powered design
-              </p>
-            </div>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <h1 style={{
+              fontSize: '48px',
+              fontWeight: 'bold',
+              marginBottom: '16px',
+              background: 'linear-gradient(90deg, #8B5CF6 0%, #EC4899 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              {getStepTitle()}
+            </h1>
+            <p style={{
+              fontSize: '18px',
+              color: 'rgba(255, 255, 255, 0.7)',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Transform your imagination into beautiful, custom products with AI-powered design
+            </p>
           </div>
 
           {/* Progress Steps */}
-          <div className="cosmic-card-premium p-8 mb-10">
-            <div className="flex items-center justify-center">
-              {[1, 2, 3, 4].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-base sm:text-lg font-bold transition-all duration-300 ${
-                    step <= currentStep 
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg' 
-                      : 'bg-white/10 text-white/60 border border-white/20'
-                  }`}>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '20px',
+            padding: '32px',
+            marginBottom: '40px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {[1, 2, 3].map((step) => (
+                <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    background: step <= currentStep 
+                      ? 'linear-gradient(90deg, #8B5CF6 0%, #EC4899 100%)'
+                      : 'rgba(255, 255, 255, 0.1)',
+                    color: '#fff',
+                    border: step <= currentStep ? 'none' : '1px solid rgba(255, 255, 255, 0.2)'
+                  }}>
                     {step}
                   </div>
-                  {step < 4 && (
-                    <div className={`w-12 sm:w-16 h-1 mx-3 sm:mx-4 transition-all duration-300 ${
-                      step < currentStep ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-white/20'
-                    }`} />
+                  {step < 3 && (
+                    <div style={{
+                      width: '64px',
+                      height: '4px',
+                      margin: '0 16px',
+                      background: step < currentStep 
+                        ? 'linear-gradient(90deg, #8B5CF6 0%, #EC4899 100%)'
+                        : 'rgba(255, 255, 255, 0.2)',
+                      borderRadius: '2px'
+                    }} />
                   )}
                 </div>
               ))}
@@ -288,84 +209,160 @@ export default function SimplifiedCreatorPage() {
           </div>
 
           {/* Step Content */}
-          <div className="cosmic-card-premium p-8 sm:p-10 lg:p-12">
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '20px',
+            padding: '48px'
+          }}>
+            
             {/* Step 1: Describe Design */}
             {currentStep === 1 && (
-              <div className="space-y-8">
-                <div className="text-center space-y-6">
-                  <h2 className="text-2xl text-white font-bold">What would you like to create?</h2>
-                  <p className="text-white/70 text-lg leading-relaxed max-w-3xl mx-auto">Describe your design idea in detail. The more specific you are, the better the AI can bring your vision to life.</p>
+              <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#fff' }}>
+                  What would you like to create?
+                </h2>
+                <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '32px', fontSize: '16px' }}>
+                  Describe your design idea in detail. The more specific you are, the better the AI can bring your vision to life.
+                </p>
+                
+                <div style={{ marginBottom: '32px' }}>
+                  <textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder="Example: A vibrant sunset over mountains with geometric patterns, in a retro synthwave style with purple and orange colors..."
+                    style={{
+                      width: '100%',
+                      height: '150px',
+                      padding: '20px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      border: '2px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '16px',
+                      color: '#fff',
+                      fontSize: '16px',
+                      resize: 'none',
+                      outline: 'none',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = 'rgba(139, 92, 246, 0.5)'
+                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                    }}
+                  />
                 </div>
                 
-                <div className="space-y-8 max-w-3xl mx-auto">
-                  <div>
-                    <label htmlFor="prompt" className="block text-base font-semibold text-white mb-4">
-                      Design Description
-                    </label>
-                    <textarea
-                      id="prompt"
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      className="cosmic-input-premium w-full h-36 py-5 px-6 resize-none text-base"
-                      placeholder="Example: A vibrant sunset over mountains with geometric patterns, in a retro synthwave style with purple and orange colors..."
-                    />
-                  </div>
-                  
-                  <button
-                    onClick={handleGenerateImage}
-                    disabled={!prompt.trim() || isGenerating}
-                    className="w-full cosmic-button-premium cosmic-button-xl disabled:opacity-50 disabled:cursor-not-allowed min-h-[64px] font-bold"
-                  >
-                    {isGenerating ? (
-                      <div className="flex items-center justify-center gap-3">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                        Generating Design...
-                      </div>
-                    ) : (
-                      'Generate Design'
-                    )}
-                  </button>
-                </div>
+                <button
+                  onClick={handleGenerateImage}
+                  disabled={!prompt.trim() || isGenerating}
+                  style={{
+                    width: '100%',
+                    padding: '20px',
+                    background: isGenerating 
+                      ? 'rgba(139, 92, 246, 0.3)'
+                      : 'linear-gradient(90deg, #8B5CF6 0%, #EC4899 100%)',
+                    border: 'none',
+                    borderRadius: '16px',
+                    color: '#fff',
+                    fontSize: '18px',
+                    fontWeight: '700',
+                    cursor: isGenerating || !prompt.trim() ? 'not-allowed' : 'pointer',
+                    opacity: isGenerating || !prompt.trim() ? 0.5 : 1,
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {isGenerating ? 'Generating Design...' : 'Generate Design'}
+                </button>
               </div>
             )}
 
             {/* Step 2: Choose Product */}
             {currentStep === 2 && (
-              <div className="space-y-8">
-                <div className="text-center space-y-6">
-                  <h2 className="text-2xl text-white font-bold">Choose Your Product</h2>
-                  <p className="text-white/70 text-lg leading-relaxed max-w-3xl mx-auto">Select the product you'd like to apply your design to.</p>
+              <div>
+                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                  <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#fff' }}>
+                    Choose Your Product
+                  </h2>
+                  <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '16px' }}>
+                    Select the product you'd like to apply your design to.
+                  </p>
                 </div>
 
                 {generatedImage && (
-                  <div className="text-center mb-10">
-                    <div className="inline-block cosmic-card-premium p-6">
+                  <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                    <div style={{
+                      display: 'inline-block',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      padding: '24px',
+                      borderRadius: '16px'
+                    }}>
                       <img 
                         src={generatedImage} 
                         alt="Generated design" 
-                        className="w-56 h-56 object-cover mx-auto rounded-xl cursor-pointer hover:scale-105 transition-transform shadow-2xl"
-                        onClick={() => setShowImageDialog(true)}
+                        style={{
+                          width: '200px',
+                          height: '200px',
+                          objectFit: 'cover',
+                          borderRadius: '12px',
+                          cursor: 'pointer'
+                        }}
                       />
-                      <p className="text-white/70 text-base mt-4 font-medium">Your Generated Design</p>
+                      <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px', marginTop: '12px' }}>
+                        Your Generated Design
+                      </p>
                     </div>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                  gap: '24px'
+                }}>
                   {products.map((product) => (
                     <div
                       key={product.id}
                       onClick={() => handleProductSelect(product)}
-                      className="cosmic-card-premium group cursor-pointer p-8 text-center hover:scale-105 transition-transform min-h-[280px] flex flex-col justify-between"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '16px',
+                        padding: '24px',
+                        textAlign: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.02)'
+                        e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.3)'
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)'
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                      }}
                     >
-                      <div className="space-y-4">
-                        <div className="h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
-                          <span className="text-5xl">📦</span>
-                        </div>
-                        <h3 className="text-xl text-white font-bold">{product.name}</h3>
-                        <p className="text-white/60 text-base">{product.category}</p>
+                      <div style={{
+                        height: '120px',
+                        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '16px'
+                      }}>
+                        <span style={{ fontSize: '48px' }}>📦</span>
                       </div>
-                      <p className="text-purple-400 font-bold text-lg mt-4">
+                      <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', marginBottom: '8px' }}>
+                        {product.name}
+                      </h3>
+                      <p style={{ color: 'rgba(255, 255, 255, 0.6)', marginBottom: '12px' }}>
+                        {product.category}
+                      </p>
+                      <p style={{ color: '#8B5CF6', fontWeight: 'bold' }}>
                         From ${Math.min(...product.variants.map(v => v.price))}
                       </p>
                     </div>
@@ -374,119 +371,112 @@ export default function SimplifiedCreatorPage() {
               </div>
             )}
 
-            {/* Step 3: Preview Design */}
+            {/* Step 3: Order */}
             {currentStep === 3 && selectedProduct && (
-              <div className="space-y-8">
-                <div className="text-center space-y-4">
-                  <h2 className="text-h2 text-white font-bold">Preview Your Design</h2>
-                  <p className="text-white/70">See how your design looks on the {selectedProduct.name}.</p>
+              <div>
+                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                  <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#fff' }}>
+                    Complete Your Order
+                  </h2>
+                  <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '16px' }}>
+                    Review your design and place your order.
+                  </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div className="cosmic-card p-6">
-                      <h3 className="text-h4 text-white font-bold mb-4">Product Details</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-white mb-2">Size/Variant</label>
-                          <select
-                            value={selectedVariant}
-                            onChange={(e) => setSelectedVariant(e.target.value)}
-                            className="cosmic-input w-full py-3 px-4"
-                          >
-                            {selectedProduct.variants.map((variant: any) => (
-                              <option key={variant.id} value={variant.id}>
-                                {variant.name} - ${variant.price}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '32px',
+                  alignItems: 'start'
+                }}>
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', marginBottom: '24px' }}>
+                      Product Details
+                    </h3>
+                    
+                    <div style={{ marginBottom: '24px' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#fff', marginBottom: '8px' }}>
+                        Size/Variant
+                      </label>
+                      <select
+                        value={selectedVariant}
+                        onChange={(e) => setSelectedVariant(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          border: '2px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '12px',
+                          color: '#fff',
+                          fontSize: '15px',
+                          outline: 'none'
+                        }}
+                      >
+                        {selectedProduct.variants.map((variant: any) => (
+                          <option key={variant.id} value={variant.id} style={{ backgroundColor: '#1a1a1a', color: '#fff' }}>
+                            {variant.name} - ${variant.price}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
-                    <button
-                      onClick={generateAccurateMockup}
-                      disabled={isGeneratingMockup}
-                      className="w-full cosmic-button cosmic-button-primary cosmic-button-lg"
-                    >
-                      {isGeneratingMockup ? (
-                        <div className="flex items-center justify-center gap-3">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                          Creating Preview...
-                        </div>
-                      ) : (
-                        'Continue to Order'
-                      )}
-                    </button>
-                  </div>
-
-                  <div className="cosmic-card p-6">
-                    <h3 className="text-h4 text-white font-bold mb-4">Design Preview</h3>
-                    {accurateMockup ? (
-                      <img 
-                        src={accurateMockup} 
-                        alt="Product mockup" 
-                        className="w-full rounded-xl cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => setShowImageDialog(true)}
-                      />
-                    ) : (
-                      <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center">
-                        <span className="text-white/60">Mockup Preview</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step 4: Order */}
-            {currentStep === 4 && selectedProduct && (
-              <div className="space-y-8">
-                <div className="text-center space-y-4">
-                  <h2 className="text-h2 text-white font-bold">Complete Your Order</h2>
-                  <p className="text-white/70">Review your design and place your order.</p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="cosmic-card p-6">
-                    <h3 className="text-h4 text-white font-bold mb-4">Order Summary</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <span className="text-white/70">{selectedProduct.name}</span>
-                        <span className="text-white">
-                          ${selectedProduct.variants.find(v => v.id === selectedVariant)?.price}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Shipping</span>
-                        <span className="text-white">$4.99</span>
-                      </div>
-                      <div className="border-t border-white/20 pt-4">
-                        <div className="flex justify-between text-lg font-bold">
-                          <span className="text-white">Total</span>
-                          <span className="text-purple-400">
-                            ${((selectedProduct.variants.find(v => v.id === selectedVariant)?.price || 0) + 4.99).toFixed(2)}
+                    <div style={{ marginBottom: '24px' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#fff', marginBottom: '12px' }}>
+                        Order Summary
+                      </h4>
+                      <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{selectedProduct.name}</span>
+                          <span style={{ color: '#fff' }}>
+                            ${selectedProduct.variants.find(v => v.id === selectedVariant)?.price}
                           </span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Shipping</span>
+                          <span style={{ color: '#fff' }}>$4.99</span>
+                        </div>
+                        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.2)', paddingTop: '8px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 'bold' }}>
+                            <span style={{ color: '#fff' }}>Total</span>
+                            <span style={{ color: '#8B5CF6' }}>
+                              ${((selectedProduct.variants.find(v => v.id === selectedVariant)?.price || 0) + 4.99).toFixed(2)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     <button
                       onClick={handleOrderProduct}
-                      className="w-full cosmic-button cosmic-button-primary cosmic-button-lg mt-6"
+                      style={{
+                        width: '100%',
+                        padding: '16px',
+                        background: 'linear-gradient(90deg, #8B5CF6 0%, #EC4899 100%)',
+                        border: 'none',
+                        borderRadius: '12px',
+                        color: '#fff',
+                        fontSize: '16px',
+                        fontWeight: '700',
+                        cursor: 'pointer'
+                      }}
                     >
                       Place Order
                     </button>
                   </div>
 
-                  <div className="cosmic-card p-6">
-                    <h3 className="text-h4 text-white font-bold mb-4">Final Preview</h3>
-                    {accurateMockup && (
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', marginBottom: '24px' }}>
+                      Final Preview
+                    </h3>
+                    {generatedImage && (
                       <img 
-                        src={accurateMockup} 
+                        src={generatedImage} 
                         alt="Final product" 
-                        className="w-full rounded-xl cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => setShowImageDialog(true)}
+                        style={{
+                          width: '100%',
+                          borderRadius: '12px',
+                          border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}
                       />
                     )}
                   </div>
@@ -496,29 +486,6 @@ export default function SimplifiedCreatorPage() {
           </div>
         </div>
       </div>
-
-      {/* Payment Modal */}
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        product={selectedProduct ? {
-          id: selectedProduct.id,
-          name: selectedProduct.name,
-          variant: selectedVariant,
-          quantity: 1,
-          designUrl: generatedImage || ''
-        } : undefined}
-        onSuccess={handlePaymentSuccess}
-        onError={handlePaymentError}
-      />
-
-      {/* Image Dialog */}
-      <ImageDialog
-        isOpen={showImageDialog}
-        onClose={() => setShowImageDialog(false)}
-        imageUrl={generatedImage || ''}
-        title="Your Design"
-      />
-    </ProtectedRoute>
+    </div>
   )
 }
