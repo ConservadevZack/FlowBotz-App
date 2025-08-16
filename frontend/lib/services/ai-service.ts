@@ -8,7 +8,9 @@ export enum AIModel {
   STABLE_DIFFUSION_3 = 'stable-diffusion-3',
   MIDJOURNEY = 'midjourney-v6',
   FLUX = 'flux-pro',
-  PLAYGROUND = 'playground-v2.5'
+  PLAYGROUND = 'playground-v2.5',
+  IMAGEN4 = 'imagen-4.0-generate-preview-06-06',
+  IMAGEN4_ULTRA = 'imagen-4.0-ultra-generate-preview-06-06'
 }
 
 export interface AIGenerationOptions {
@@ -25,6 +27,11 @@ export interface AIGenerationOptions {
   numOutputs?: number;
   stylePreset?: StylePreset;
   enhancePrompt?: boolean;
+  // Imagen 4 specific options
+  aspectRatio?: '1:1' | '9:16' | '16:9' | '3:4' | '4:3';
+  safetySettings?: 'block_most' | 'block_some' | 'block_few' | 'block_none';
+  personGeneration?: 'dont_allow' | 'allow_adult';
+  addWatermark?: boolean;
 }
 
 export interface StylePreset {
@@ -209,7 +216,8 @@ export class AIService {
       stability: process.env.NEXT_PUBLIC_STABILITY_API_KEY || '',
       replicate: process.env.NEXT_PUBLIC_REPLICATE_API_KEY || '',
       midjourney: process.env.NEXT_PUBLIC_MIDJOURNEY_API_KEY || '',
-      flux: process.env.NEXT_PUBLIC_FLUX_API_KEY || ''
+      flux: process.env.NEXT_PUBLIC_FLUX_API_KEY || '',
+      google: process.env.NEXT_PUBLIC_GOOGLE_CLOUD_API_KEY || ''
     };
   }
   
@@ -250,6 +258,10 @@ export class AIService {
         break;
       case AIModel.PLAYGROUND:
         result = await this.generateWithPlayground(finalPrompt, options);
+        break;
+      case AIModel.IMAGEN4:
+      case AIModel.IMAGEN4_ULTRA:
+        result = await this.generateWithImagen(finalPrompt, options);
         break;
       default:
         throw new Error(`Unsupported model: ${options.model}`);
@@ -381,6 +393,104 @@ export class AIService {
   ): Promise<AIGenerationResult> {
     // Placeholder for Playground AI integration
     throw new Error('Playground AI integration coming soon');
+  }
+
+  private async generateWithImagen(
+    prompt: string,
+    options: AIGenerationOptions
+  ): Promise<AIGenerationResult> {
+    if (!this.apiKeys.google) {
+      throw new Error('Google Cloud API key not configured');
+    }
+
+    const location = process.env.NEXT_PUBLIC_GOOGLE_CLOUD_LOCATION || 'us-central1';
+    const projectId = process.env.NEXT_PUBLIC_GOOGLE_CLOUD_PROJECT_ID;
+    
+    if (!projectId) {
+      throw new Error('Google Cloud Project ID not configured');
+    }
+
+    const modelVersion = options.model === AIModel.IMAGEN4_ULTRA 
+      ? 'imagen-4.0-ultra-generate-preview-06-06' 
+      : 'imagen-4.0-generate-preview-06-06';
+
+    const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${modelVersion}:predict`;
+
+    // Prepare Imagen 4 specific parameters
+    const imagenParams = {
+      instances: [{
+        prompt: prompt,
+        ...(options.negativePrompt && { negativePrompt: options.negativePrompt }),
+        ...(options.aspectRatio && { aspectRatio: options.aspectRatio }),
+        sampleCount: options.numOutputs || 1,
+        ...(options.seed && { seed: options.seed }),
+        ...(options.guidanceScale && { guidanceScale: options.guidanceScale }),
+        safetyFilterLevel: options.safetySettings || 'block_some',
+        personGeneration: options.personGeneration || 'allow_adult',
+        addWatermark: options.addWatermark !== false, // Default to true
+        includeRaiReason: false,
+        includeNsfwReason: false,
+        language: 'en'
+      }],
+      parameters: {
+        sampleCount: options.numOutputs || 1
+      }
+    };
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.apiKeys.google}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(imagenParams)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Imagen 4 API error: ${response.status} ${response.statusText}. ${JSON.stringify(errorData)}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.predictions || !data.predictions[0] || !data.predictions[0].bytesBase64Encoded) {
+        throw new Error('Invalid response from Imagen 4 API');
+      }
+
+      const prediction = data.predictions[0];
+      const imageUrl = `data:image/png;base64,${prediction.bytesBase64Encoded}`;
+
+      return {
+        imageUrl,
+        model: options.model,
+        prompt,
+        metadata: {
+          width: this.getImagenDimensions(options.aspectRatio).width,
+          height: this.getImagenDimensions(options.aspectRatio).height,
+          seed: prediction.seed,
+          revisedPrompt: prediction.revisedPrompt,
+          generationTime: 0,
+          safetyRatings: prediction.safetyRatings,
+          raiFilterApplied: prediction.raiFilterApplied
+        }
+      };
+    } catch (error) {
+      console.error('Imagen 4 generation error:', error);
+      throw error;
+    }
+  }
+
+  private getImagenDimensions(aspectRatio?: string): { width: number; height: number } {
+    switch (aspectRatio) {
+      case '9:16': return { width: 720, height: 1280 };
+      case '16:9': return { width: 1280, height: 720 };
+      case '3:4': return { width: 768, height: 1024 };
+      case '4:3': return { width: 1024, height: 768 };
+      case '1:1':
+      default: return { width: 1024, height: 1024 };
+    }
   }
   
   async enhanceImage(

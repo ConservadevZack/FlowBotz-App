@@ -60,68 +60,62 @@ export default function FloatingNavbar() {
   const navItems = user ? authenticatedNavItems : publicNavItems
 
   return (
-    <nav className={`fixed top-2 left-4 right-4 z-50 transition-all duration-300 cosmic-animate-slide-in-left ${
-      isScrolled ? 'top-1' : 'top-2'
+    <nav className={`fixed top-1 left-2 right-2 z-50 transition-all duration-300 cosmic-animate-slide-in-left compact-nav ${
+      isScrolled ? 'top-0.5' : 'top-1'
     }`} role="navigation" aria-label="Main navigation">
-      <div className={`max-w-7xl mx-auto transition-all duration-300 ${
+      <div className={`transition-all duration-300 ${
         isScrolled 
           ? 'cosmic-glass-strong backdrop-blur-xl border-white/30' 
           : 'cosmic-glass-medium border-white/20'
-      } border shadow-2xl`} 
-      style={{ borderRadius: 'var(--radius-xl)' }}>
-        <div className="px-6 py-2.5">
+      } border shadow-lg`} 
+      style={{ borderRadius: 'clamp(0.5rem, 0.46rem + 0.2vw, 0.75rem)' }}>
+        <div className="p-compact-base">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-3 cosmic-interactive cosmic-focus-ring cosmic-tooltip group" aria-label="FlowBotz homepage">
-              <div className="cosmic-tooltip-content">FlowBotz - AI Design Platform</div>
-              <div className="stellar-glass-purple w-10 h-10 flex items-center justify-center cosmic-animate-glow group-hover:scale-110 transition-all duration-300" style={{ borderRadius: 'var(--radius-lg)' }}>
-                <span className="text-white font-bold text-base cosmic-animate-icon-bounce">F</span>
+            {/* Logo - Much smaller */}
+            <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-2 cosmic-interactive cosmic-focus-ring group compact-interactive" aria-label="FlowBotz homepage">
+              <div className="stellar-glass-purple logo cosmic-animate-glow group-hover:scale-110 transition-all duration-300 flex items-center justify-center" style={{ borderRadius: 'clamp(0.25rem, 0.23rem + 0.1vw, 0.375rem)' }}>
+                <span className="text-white font-bold cosmic-animate-icon-bounce">F</span>
               </div>
-              <span className="text-xl cosmic-text-gradient font-bold hidden sm:block cosmic-animate-text-reveal group-hover:scale-105 transition-transform duration-300">FlowBotz</span>
+              <span className="text-compact-lg cosmic-text-gradient font-bold hidden sm:block cosmic-animate-text-reveal group-hover:scale-105 transition-transform duration-300">FlowBotz</span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-2" role="menubar">
+            {/* Desktop Navigation - Compact */}
+            <div className="hidden md:flex items-center gap-1" role="menubar">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   role="menuitem"
-                  className={`px-4 py-2.5 rounded-xl transition-all duration-300 font-semibold text-sm cosmic-focus-ring cosmic-interactive cosmic-tooltip ${
+                  className={`btn-compact-sm transition-all duration-300 cosmic-focus-ring cosmic-interactive nav-text ${
                     pathname === item.href
-                      ? 'bg-purple-500/25 text-purple-200 shadow-lg cosmic-animate-glow border border-purple-400/30'
+                      ? 'bg-purple-500/25 text-purple-200 shadow-md cosmic-animate-glow border border-purple-400/30'
                       : 'text-white/85 hover:text-white hover:bg-white/10 hover:scale-105'
                   }`}
-                  style={{ borderRadius: 'var(--radius-lg)' }}
+                  style={{ borderRadius: 'clamp(0.25rem, 0.23rem + 0.1vw, 0.375rem)' }}
                 >
-                  <div className="cosmic-tooltip-content">{`Navigate to ${item.label}`}</div>
                   {item.label}
                 </Link>
               ))}
             </div>
 
-            {/* Desktop Auth Actions */}
-            <div className="hidden md:flex items-center gap-3">
+            {/* Desktop Auth Actions - Compact */}
+            <div className="hidden md:flex items-center gap-1">
               {user ? (
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                    className="flex items-center gap-2 px-2 py-2 h-10 rounded-xl hover:bg-white/10 transition-all duration-300 cosmic-focus-ring cosmic-interactive cosmic-tooltip group"
-                    style={{ borderRadius: 'var(--radius-lg)' }}
+                    className="flex items-center gap-1 btn-compact-sm hover:bg-white/10 transition-all duration-300 cosmic-focus-ring cosmic-interactive group"
+                    style={{ borderRadius: 'clamp(0.25rem, 0.23rem + 0.1vw, 0.375rem)' }}
                     aria-label="User menu"
                     aria-expanded={isUserDropdownOpen}
                     aria-haspopup="true"
                   >
-                    <div className="cosmic-tooltip-content">User account menu</div>
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs shadow-lg group-hover:scale-110 transition-transform duration-300" style={{ borderRadius: 'var(--radius-md)' }}>
+                    <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs group-hover:scale-110 transition-transform duration-300" style={{ borderRadius: 'clamp(0.125rem, 0.11rem + 0.07vw, 0.25rem)' }}>
                       {(user.user_metadata?.first_name || user.user_metadata?.firstName || user.email || 'U')[0]}
                     </div>
-                    <div className="text-left hidden xl:block min-w-0 flex-1">
+                    <div className="text-left hidden lg:block min-w-0">
                       <div className="text-xs font-semibold text-white truncate">
                         {user.user_metadata?.first_name || user.user_metadata?.firstName || 'User'}
-                      </div>
-                      <div className="text-xs text-white/70 font-medium">
-                        Starter
                       </div>
                     </div>
                     <span className="text-white/70 text-xs transition-transform duration-300 group-hover:scale-110">
@@ -194,28 +188,25 @@ export default function FloatingNavbar() {
                 </div>
               ) : (
                 <>
-                  <Link href="/login" className="cosmic-button cosmic-button-ghost cosmic-button-sm cosmic-focus-ring text-sm cosmic-tooltip font-semibold hover:scale-105 transition-transform duration-300">
-                    <div className="cosmic-tooltip-content">Sign in to your account</div>
+                  <Link href="/login" className="btn-compact-sm cosmic-button-ghost cosmic-focus-ring nav-text hover:scale-105 transition-transform duration-300">
                     Sign In
                   </Link>
-                  <Link href="/signup" className="cosmic-button-premium cosmic-button-sm cosmic-focus-ring text-sm cosmic-tooltip font-semibold hover:scale-105 transition-transform duration-300 shadow-lg">
-                    <div className="cosmic-tooltip-content">Create a new account</div>
+                  <Link href="/signup" className="btn-compact-sm cosmic-button-premium cosmic-focus-ring nav-text hover:scale-105 transition-transform duration-300 shadow-md">
                     Get Started
                   </Link>
                 </>
               )}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Compact */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden cosmic-button cosmic-button-glass cosmic-button-sm cosmic-focus-ring p-3 cosmic-tooltip hover:scale-110 transition-all duration-300"
+              className="md:hidden btn-compact-sm cosmic-button-glass cosmic-focus-ring compact-interactive hover:scale-110 transition-all duration-300"
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              <div className="cosmic-tooltip-content">{isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}</div>
-              <span className="text-xl cosmic-animate-icon-bounce transition-transform duration-300">
+              <span className="text-compact-base cosmic-animate-icon-bounce transition-transform duration-300">
                 {isMobileMenuOpen ? '✕' : '☰'}
               </span>
             </button>

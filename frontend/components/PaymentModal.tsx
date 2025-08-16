@@ -8,6 +8,7 @@ import {
   useStripe,
   useElements
 } from '@stripe/react-stripe-js'
+import { apiService } from '@/lib/api'
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
@@ -16,6 +17,13 @@ interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
   amount: number
+  type?: 'product' | 'subscription'
+  subscriptionData?: {
+    priceId: string
+    planName: string
+    interval: string
+    features: string[]
+  }
   productDetails?: {
     id: string
     name: string
@@ -29,13 +37,15 @@ interface PaymentModalProps {
 
 interface CheckoutFormProps {
   amount: number
+  type?: 'product' | 'subscription'
+  subscriptionData?: PaymentModalProps['subscriptionData']
   productDetails?: PaymentModalProps['productDetails']
   onSuccess?: (paymentIntent: any) => void
   onError?: (error: string) => void
   onClose: () => void
 }
 
-function CheckoutForm({ amount, productDetails, onSuccess, onError, onClose }: CheckoutFormProps) {
+function CheckoutForm({ amount, type = 'product', subscriptionData, productDetails, onSuccess, onError, onClose }: CheckoutFormProps) {
   const stripe = useStripe()
   const elements = useElements()
   const [isProcessing, setIsProcessing] = useState(false)
@@ -49,19 +59,17 @@ function CheckoutForm({ amount, productDetails, onSuccess, onError, onClose }: C
 
   const createPaymentIntent = async () => {
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null
-      
-      let endpoint = '/api/payments/create-payment-intent'
-      let body: any = {
-        amount: amount * 100, // Convert to cents
-        currency: 'usd',
-        metadata: {}
-      }
+      let data: any
 
-      // If this is a product purchase, use the product endpoint
-      if (productDetails) {
-        endpoint = '/api/payments/purchase-product'
-        body = {
+      if (type === 'subscription' && subscriptionData) {
+        // Create subscription
+        data = await apiService.payments.createSubscription(
+          subscriptionData.priceId,
+          { plan_name: subscriptionData.planName }
+        )
+      } else if (productDetails) {
+        // Product purchase
+        data = await apiService.payments.purchaseProduct({
           product_id: productDetails.id,
           variant_id: productDetails.variant,
           quantity: productDetails.quantity,
@@ -76,23 +84,11 @@ function CheckoutForm({ amount, productDetails, onSuccess, onError, onClose }: C
             country: "US"
           },
           customer_email: "customer@example.com"
-        }
+        })
+      } else {
+        // One-time payment
+        data = await apiService.payments.createPaymentIntent(amount, 'usd', {})
       }
-
-      const response = await fetch(`http://localhost:8000${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(body)
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create payment intent')
-      }
-
-      const data = await response.json()
       setClientSecret(data.client_secret)
     } catch (error) {
       console.error('Payment intent creation failed:', error)
@@ -163,8 +159,32 @@ function CheckoutForm({ amount, productDetails, onSuccess, onError, onClose }: C
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Order Summary */}
       <div className="cosmic-card p-4">
-        <h3 className="text-lg font-semibold text-white mb-4">Order Summary</h3>
-        {productDetails ? (
+        <h3 className="text-lg font-semibold text-white mb-4">
+          {type === 'subscription' ? 'Subscription Details' : 'Order Summary'}
+        </h3>
+        
+        {type === 'subscription' && subscriptionData ? (
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-white font-medium">{subscriptionData.planName}</span>
+              <span className="text-green-400 font-bold">${amount.toFixed(2)}</span>
+            </div>
+            <div className="text-sm text-white/60">
+              Billed {subscriptionData.interval}ly
+            </div>
+            
+            {/* Features List */}
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <div className="text-sm font-medium text-white/80 mb-2">Included:</div>
+              {subscriptionData.features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2 text-xs text-white/70">
+                  <span className="text-green-400">✓</span>
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : productDetails ? (
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-white/70">{productDetails.name}</span>
@@ -252,6 +272,8 @@ export default function PaymentModal({
   isOpen,
   onClose,
   amount,
+  type = 'product',
+  subscriptionData,
   productDetails,
   onSuccess,
   onError
@@ -267,11 +289,11 @@ export default function PaymentModal({
       />
       
       {/* Modal */}
-      <div className="relative w-full max-w-md mx-4">
-        <div className="cosmic-card-hero p-6">
+      <div className="relative w-full max-w-sm mx-4">
+        <div className="cosmic-card-hero p-4">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold cosmic-text-gradient">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-compact-base font-bold cosmic-text-gradient">
               Complete Payment
             </h2>
             <button
@@ -288,6 +310,8 @@ export default function PaymentModal({
           <Elements stripe={stripePromise}>
             <CheckoutForm
               amount={amount}
+              type={type}
+              subscriptionData={subscriptionData}
               productDetails={productDetails}
               onSuccess={onSuccess}
               onError={onError}

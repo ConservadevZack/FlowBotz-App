@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import Navigation from '../components/Navigation'
-import { authService } from '../../lib/auth'
+// import { authService } from '../../lib/auth' // Temporarily removed
 import { supabase } from '../../lib/supabase'
 
 export default function SignupPage() {
@@ -25,18 +25,24 @@ export default function SignupPage() {
     setIsLoading(true)
     
     try {
-      const result = await authService.signUp({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            full_name: `${formData.firstName} ${formData.lastName}`
+          }
+        }
       })
       
-      if (result.success) {
-        alert('Account created successfully!')
+      if (error) {
+        console.error('Signup error:', error)
+        alert(error.message || 'Registration failed')
+      } else if (data.user) {
+        alert('Account created successfully! Please check your email to verify your account.')
         window.location.href = '/creator'
-      } else {
-        alert(result.error || 'Registration failed')
       }
     } catch (error) {
       console.error('Signup error:', error)

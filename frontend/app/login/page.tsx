@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import Navigation from '../components/Navigation'
-import { authService } from '../../lib/auth'
+// import { authService } from '../../lib/auth' // Temporarily removed
 import { supabase } from '../../lib/supabase'
 
 export default function LoginPage() {
@@ -16,12 +16,17 @@ export default function LoginPage() {
     setIsLoading(true)
     
     try {
-      const result = await authService.signIn(email, password)
-      if (result.success) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+      
+      if (error) {
+        console.error('Login error:', error)
+        alert(error.message || 'Login failed')
+      } else if (data.user) {
         alert('Login successful!')
         window.location.href = '/creator'
-      } else {
-        alert(result.error || 'Login failed')
       }
     } catch (error) {
       console.error('Login error:', error)
